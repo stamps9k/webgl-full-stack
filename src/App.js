@@ -6,7 +6,7 @@ const App = () => {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        fetch("/api/hello")
+        fetch("/api/model/model_shaders")
             .then(response => response.json())
             .then(data => setMessage(data.message))
             .catch(error => console.error("Error fetching data:", error));

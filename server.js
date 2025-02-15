@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const models = require('./api/models');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,9 +12,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// API Route Example
-app.get('/api/hello', (req, res) => {
-    res.json({ message: 'Hello from the backend!' });
+//Externally defined routes
+app.use(models);
+
+// API Fallback API Response
+app.get('/api/*', (req, res) => {
+    res.status(404);
+    res.json({ message: 'Unknown API endpint' });
 });
 
 // Catch-all for SPA (React)
