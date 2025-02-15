@@ -2,7 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const debug = require("debug");
 const models = require('./api/models');
+
+//Define all posasible logging levels
+const super_super_verbose = require('debug')("app:SUPER_SUPER_VERBOSE");
+const super_verbose = require('debug')("app:SUPER_VERBOSE");
+const verbose = require('debug')("app:VERBOSE");
+const info = require('debug')('app:INFO');
+const warn = require('debug')("app:WARN");
+const error = require('debug')("app:ERROR");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
