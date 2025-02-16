@@ -14,5 +14,13 @@ info("Info debugging enabled.");
 warn("Warn debugging enable");
 error("Error debugging enabled.");
 
+// Expose the function globally (for global access from rust)
+globalThis.super_super_verbose_api = (message) => super_super_verbose(message);
+globalThis.super_verbose_api = (message) => super_verbose(message);
+globalThis.verbose_api = (message) => verbose(message);
+globalThis.info_api = (message) => info(message);
+globalThis.warn_api = (message) => warn(message);
+globalThis.error_api = (message) => error(message);
+
 // Export from this module for access in rest of project 
 export { super_super_verbose, super_verbose, verbose, info, warn, error };
