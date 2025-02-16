@@ -30,7 +30,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "wasm-model-viewer-core": "github:stamps9k/wasm-model-viewer-core-bin"
   },
   "devDependencies": {
     "@babel/core": "^7.26.8",

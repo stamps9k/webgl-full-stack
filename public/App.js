@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 import "./cover.css";
+import * as webgl from "./webgl.js";
+
 
 const App = () => {
     const [message, setMessage] = useState("");
@@ -12,10 +15,12 @@ const App = () => {
             .catch(error => console.error("Error fetching data:", error));
     }, []);
 
+    useEffect(() => {
+        webgl.fetch_vert_shader();
+    }, []);
+
     return (
-        <div className="container mt-5">
-            <h1 className="text-primary">{message || "Loading..."}</h1>
-        </div>
+        <canvas id="glCanvas" className="border" width="640" height="480"></canvas>
     );
 };
 

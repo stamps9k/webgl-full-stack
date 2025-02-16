@@ -13,6 +13,9 @@ module.exports = (env, argv) => {
             path: path.resolve(__dirname, 'dist'),
             publicPath: '/'
         },
+        experiments: {
+            asyncWebAssembly: true
+        },
         devtool: isDev ? 'source-map' : false,
         devServer: {
             static: './dist',
