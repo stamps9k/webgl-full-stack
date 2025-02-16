@@ -7,7 +7,7 @@ module.exports = (env, argv) => {
     const isDev = argv.mode === 'development';
 
     return {
-        entry: './src/index.js',
+        entry: './public/index.js',
         output: {
             filename: 'bundle.js',
             path: path.resolve(__dirname, 'dist'),
@@ -87,7 +87,7 @@ module.exports = (env, argv) => {
         plugins: [
             new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
-                template: './src/index.html'
+                template: './public/index.html'
             }),
             new MiniCssExtractPlugin({
                 filename: 'styles.css'
