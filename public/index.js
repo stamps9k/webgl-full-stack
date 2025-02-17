@@ -4,6 +4,7 @@ import App from "./components/App.js";
 
 //Assets imported by webpack
 import '../assets/models/cube.obj';
+import '../assets/models/teapot.obj';
 import '../assets/img/icon.jpg';
 import '../assets/shaders/cube.vert';
 import '../assets/shaders/cube.frag';
