@@ -56,14 +56,14 @@ window.update_rotate_z = update_rotate_z;
 
 function fetch_vert_shader() {
 	const url_params = new URLSearchParams(window.location.search);
-	if (url_params.get('model') == null) 
+	if (url_params.get('shader') == null) 
 	{
 		var vert_shader = "cube.vert";
 	} else {
-		var vert_shader = url_params.get('model') + ".vert";
+		var vert_shader = url_params.get('shader') + ".vert";
 	}
 	info("Loading shader " + vert_shader + "...");
-	fetch('assets/cube.vert')
+	fetch('assets/' + vert_shader)
         .then(response => response.text())
         .then(text => {
 			info("... vert shader loaded");
@@ -78,14 +78,14 @@ function fetch_vert_shader() {
 
 function fetch_frag_shader(resources) {
 	const url_params = new URLSearchParams(window.location.search);
-	if (url_params.get('model') == null) 
+	if (url_params.get('shader') == null) 
 	{
 		var frag_shader = "cube.frag";
 	} else {
-		var frag_shader = url_params.get('model') + ".frag";
+		var frag_shader = url_params.get('shader') + ".frag";
 	}
 	info("Loading shader " + frag_shader + "...");
-	fetch('assets/cube.frag')
+	fetch('assets/' + frag_shader)
         .then(response => response.text())
         .then(text => {
 			info("... frag shader loaded");
@@ -106,7 +106,7 @@ function fetch_model(resources) {
 		var model = url_params.get('model') + ".obj";
 	}
 	info("Loading model " + model + "...");
-	fetch('assets/cube.obj')
+	fetch('assets/' + model)
         .then(response => response.text())
         .then(text => {
 			info("... model loaded");

@@ -1,6 +1,5 @@
 function set_fps(fps)
 {
-    console.log(fps);
     //TODO reimplement in react style
     //$("#fps").html("FPS - " + Math.round(fps));
 }
