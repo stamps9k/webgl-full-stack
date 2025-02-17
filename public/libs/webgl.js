@@ -2,21 +2,6 @@ import * as wasm from "wasm-model-viewer-core";
 import { info, verbose, warn, error } from "./debug_config.js";
 import { set_fps } from "./dom_update.js";
 
-/*
-$.ajaxSetup
-(
-	{
-		beforeSend: function (jqXHR, settings) 
-		{
-			if (settings.dataType === 'binary')
-				settings.xhr = () => $.extend(new window.XMLHttpRequest(), {responseType:'arraybuffer'})
-		}
-	}
-);
-
-$(document).ready(fetch_vert_shader)
-*/
-
 // Register a mousemove listener and send data to WebAssembly
 document.addEventListener("mousemove", (event) => {
     if (window.get_mouse_position) {
@@ -24,8 +9,8 @@ document.addEventListener("mousemove", (event) => {
     }
 });
 
-function update_rotate_x(checkboxElem) {
-	if (checkboxElem.checked) 
+function update_rotate_x(event) {
+	if (event.target.checked) 
 	{
 		wasm.enable_rotate_x();
 	} else {
@@ -34,8 +19,8 @@ function update_rotate_x(checkboxElem) {
 }
 window.update_rotate_x = update_rotate_x;
 
-function update_rotate_y(checkboxElem) {
-	if (checkboxElem.checked) 
+function update_rotate_y(event) {
+	if (event.target.checked) 
 	{
 		wasm.enable_rotate_y();
 	} else {
@@ -44,8 +29,8 @@ function update_rotate_y(checkboxElem) {
 }
 window.update_rotate_y = update_rotate_y;
 
-function update_rotate_z(checkboxElem) {
-	if (checkboxElem.checked) 
+function update_rotate_z(event) {
+	if (event.target.checked) 
 	{
 		wasm.enable_rotate_z();
 	} else {
@@ -152,4 +137,4 @@ function init(resources) {
 }
 
 //export public facing functions
-export { fetch_vert_shader }
+export { fetch_vert_shader, update_rotate_x, update_rotate_y, update_rotate_z }
