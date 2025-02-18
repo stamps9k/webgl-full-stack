@@ -43,7 +43,7 @@ function fetch_vert_shader() {
 	const url_params = new URLSearchParams(window.location.search);
 	if (url_params.get('shader') == null) 
 	{
-		var vert_shader = "cube.vert";
+		var vert_shader = "vert-color.vert";
 	} else {
 		var vert_shader = url_params.get('shader') + ".vert";
 	}
@@ -65,7 +65,7 @@ function fetch_frag_shader(resources) {
 	const url_params = new URLSearchParams(window.location.search);
 	if (url_params.get('shader') == null) 
 	{
-		var frag_shader = "cube.frag";
+		var frag_shader = "vert-color.frag";
 	} else {
 		var frag_shader = url_params.get('shader') + ".frag";
 	}
