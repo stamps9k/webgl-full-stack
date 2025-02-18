@@ -60,9 +60,16 @@ const ModelForm = () => {
                 </a>
             </div>
             <div id="collapseOne" className="collapse py-3" >
-                <div className="card-body">
+                <div className="border border-light card-body py-1">
                     <form id="model" target="_self" method="get" action="/index.html">
-                        <label htmlFor="model">Model: </label>
+                        <div id="headingRow" className="ms-auto text-start row">
+                        <h3 htmlFor="model" className="text-decoration-underline">Model Selection</h3>
+                        </div>
+                        <div id="modelRow" className="ms-auto text-start row">
+                        <div id="modelLabel" className="col-1">
+                            <label htmlFor="model">Model: </label>
+                        </div>
+                        <div id="modelElement" className="col-1">
                         <select id="model" name="model">
                             {
                                 models.map
@@ -76,6 +83,13 @@ const ModelForm = () => {
                                 )
                             }
                         </select>
+                        </div>
+                        </div>
+                        <div id="shaderRow" className="ms-auto text-start py-1 row">
+                        <div id="shaderLabel" className="col-1"> 
+                        <label htmlFor="shader">Shader: </label>
+                        </div>
+                        <div id="shaderElement" className="col-1">
                         <select id="shader" name="shader">
                             {
                                 shaders.map
@@ -89,8 +103,14 @@ const ModelForm = () => {
                                 )
                             }
                         </select>
-                        <input type="submit" />
-                    </form>
+                        </div>
+                        </div>
+                        <div id="submitRow" className="ms-auto py-1 row">
+                        <div className="col-1 mx-1">
+                        <button className="btn btn-success">Submit</button>
+                        </div>
+                        </div>
+                        </form>
                 </div>
             </div>
         </div>

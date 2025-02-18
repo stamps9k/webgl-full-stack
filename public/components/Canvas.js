@@ -12,7 +12,7 @@ const Canvas = () => {
         <div>
             <h1>Web Assembly Model Viewer</h1>
             <ModelForm />
-            <canvas id="glCanvas" className="border" width="640" height="480"></canvas>
+            <canvas id="glCanvas" className="border" width="736" height="480"></canvas>
             <div className="row">
                 <div id="fps" className="w-25">
                     FPS - #N/A
