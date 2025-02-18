@@ -25,7 +25,7 @@ const db = new sqlite3.Database(dbPath, (err) =>
 
 const models_routes = express.Router();
 
-var model_shaders_query_string = "SELECT models.model_id, models.name AS model_name, shaders.shader_id, shaders.name AS shader_name FROM models " +
+var model_shaders_query_string = "SELECT models.model_id, models.name AS model_name, shaders.shader_id, shaders.name AS shader_name, shaders.description AS shader_description, shaders.display_name AS shader_display_name FROM models " +
     "INNER JOIN models_shaders ON models.model_id = models_shaders.model_id " +
     "INNER JOIN shaders ON models_shaders.shader_id = shaders.shader_id " +
     "WHERE models.name = ?;";
@@ -54,7 +54,9 @@ const model_shaders_query_promise = (model_name) => {
                 {
                     var tmp = {};
                     tmp["shader_id"] = row.shader_id;
-                    tmp["shader_name"] = row.shader_name;
+                    tmp["name"] = row.shader_name;
+                    tmp["description"] = row.shader_description;
+                    tmp["display_name"] = row.shader_display_name;
                     results.push(tmp);
                 },
                 (err, count) =>
