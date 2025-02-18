@@ -9,6 +9,10 @@ import '../assets/img/icon.jpg';
 import '../assets/img/favicons/favicon.ico';
 import '../assets/shaders/vert-color.vert';
 import '../assets/shaders/vert-color.frag';
+import '../assets/shaders/vert-color-mouse.vert';
+import '../assets/shaders/vert-color-mouse.frag';
+import '../assets/shaders/vert-color-time.vert';
+import '../assets/shaders/vert-color-time.frag';
 import "./css/cover.css";
 
 //React initialization
