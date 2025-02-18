@@ -4,7 +4,8 @@ import { Collapse } from "bootstrap";
 
 const ModelForm = () => {
     const [toggle, setToggle] = useState(false);
-    const [models, set_models] = useState([{model_id: 1, name: "asd", display_name: "asdsa"}]);
+    const [models, set_models] = useState([{model_id: 1, name: "cube.obj", display_name: "Cube"}]);
+    const [shaders, set_shaders] = useState([{shader_id: 1, name: "vert-color", display_name: "Colored Vertices"}]);
 
     const { search } = useLocation();
     const params = new URLSearchParams(search);
@@ -15,11 +16,32 @@ const ModelForm = () => {
         paramMap.set(key, value);
     }
 
+
+    //Add default model if not set
+    if (paramMap.get("model") == undefined)
+    {
+        paramMap.set("model", "cube.obj");
+    }
+    if (paramMap.get("shader") == undefined)
+    {
+        paramMap.set("shader", "vert-color");
+    }
+
     useEffect(() => {
         fetch("/api/model/models")
             .then(response => response.json())
             .then(data => {
                 set_models(data.message);
+            })
+            .catch(error => console.error("Error fetching data:", error));
+    }, []);
+
+    useEffect(() => {
+        fetch("/api/model/model_shaders?model_name=" + paramMap.get("model"))
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                set_shaders(data.message);
             })
             .catch(error => console.error("Error fetching data:", error));
     }, []);
@@ -49,6 +71,19 @@ const ModelForm = () => {
                                     (
                                         <option key={model.model_id} value={model.name}>
                                             {model.display_name}
+                                        </option>
+                                    )
+                                )
+                            }
+                        </select>
+                        <select id="shader" name="shader">
+                            {
+                                shaders.map
+                                (
+                                    (shader) => 
+                                    (
+                                        <option key={shader.shader_id} value={shader.name}>
+                                            {shader.display_name}
                                         </option>
                                     )
                                 )
