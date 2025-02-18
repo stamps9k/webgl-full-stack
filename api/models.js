@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const { register } = require('module');
 const sqlite3 = require('sqlite3').verbose();
 
 //Define all posasible logging levels
@@ -32,6 +33,12 @@ var model_shaders_query_string = "SELECT models.model_id, models.name AS model_n
 var model_info_query_string = "SELECT models.model_id, models.name AS model_name, models.description AS model_description FROM models " +
     "WHERE models.model_id = ?;";
 
+var models_query_string = "SELECT " +
+    "models.model_id AS model_id, " +
+    "models.name AS name, " +
+    "models.display_name AS display_name, " +
+    "models.description AS description " +
+    "FROM models;";
 
 const model_shaders_query_promise = (model_id) => {
     return new Promise
@@ -88,9 +95,59 @@ const model_info_query_promise = (model_id) => {
     )
 }
 
+const models_query_promise = () => {
+    return new Promise
+    (
+        (resolve, reject) => {
+            super_verbose("Running query " + models_query_string + "...");
+            const results = [];
+            db.each
+            (
+                models_query_string,
+                (err, row) =>
+                {
+                    info("test");
+                    var tmp = {};
+                    tmp["model_id"] = row.model_id;
+                    tmp["name"] = row.name;
+                    tmp["display_name"] = row.display_name;
+                    tmp["description"] = row.description;
+                    results.push(tmp);
+                },
+                (err, count) =>
+                {
+                    if (count == undefined) {
+                        count = 0;
+                    }
+                    verbose("Query returned " + count + " results.")
+                    resolve(results);
+                }
+            );
+            super_verbose("... query completed.");
+        }
+    )
+}
+
+models_routes.get('/api/model/models', async (req, res) => {
+    info("Processing request: " + req.url);
+    try
+    {
+        verbose("Querying database...");
+        var message = await models_query_promise();
+        verbose("...database query complete.");
+        super_super_verbose("Returning " + JSON.stringify(message));
+        res.json({ success: true, message });
+    } 
+    catch (err)
+    {
+        error("Error processing query: " + err);  
+        res.status(500).json({ success: false, error: err.message });  
+    }
+
+})
+
 // API Route to get model information
 models_routes.get('/api/model/model_info', async (req, res) => {
-    //console.log(process.env.DEBUG)
     info("Processing request: " + req.url);
     if (req.query.model_id == null || req.query.model_id == undefined)
     {

@@ -88,7 +88,7 @@ function fetch_model(resources) {
 	{
 		var model = "cube.obj";
 	} else {
-		var model = url_params.get('model') + ".obj";
+		var model = url_params.get('model');
 	}
 	info("Loading model " + model + "...");
 	fetch('assets/' + model)
