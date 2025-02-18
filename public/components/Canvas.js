@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import SceneForm from "./ModelForm.js";
+import ModelForm from "./ModelForm.js";
 import * as webgl from "../libs/webgl.js";
 
 const Canvas = () => {
@@ -11,7 +11,7 @@ const Canvas = () => {
     return (
         <div>
             <h1>Web Assembly Model Viewer</h1>
-            <SceneForm />
+            <ModelForm />
             <canvas id="glCanvas" className="border" width="640" height="480"></canvas>
             <div className="row">
                 <div id="fps" className="w-25">

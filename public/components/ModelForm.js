@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Collapse } from "bootstrap";
 
-const Canvas = () => {
-    var [toggle, setToggle] = useState(false);
+const ModelForm = () => {
+    const [toggle, setToggle] = useState(false);
+    const [models, set_models] = useState([{model_id: 1, name: "asd", display_name: "asdsa"}]);
 
     const { search } = useLocation();
     const params = new URLSearchParams(search);
@@ -14,14 +15,14 @@ const Canvas = () => {
         paramMap.set(key, value);
     }
 
-    /*
-        useEffect(() => {
-            fetch("/api/model/model_shaders")
-                .then(response => response.json())
-                .then(data => setMessage(data.message))
-                .catch(error => console.error("Error fetching data:", error));
-        }, []);
-    */
+    useEffect(() => {
+        fetch("/api/model/models")
+            .then(response => response.json())
+            .then(data => {
+                set_models(data.message);
+            })
+            .catch(error => console.error("Error fetching data:", error));
+    }, []);
 
     useEffect(() => {
         var myCollapse = document.getElementById('collapseOne')
@@ -41,11 +42,17 @@ const Canvas = () => {
                     <form id="model" target="_self" method="get" action="/index.html">
                         <label htmlFor="model">Model: </label>
                         <select id="model" name="model">
-                            <option value="cube">cube</option>
-                            <option value="cube-time">cube-time</option>
-                            <option value="cube-mouse">cube-mouse</option>
-                            <option value="teapot">teapot</option>
-                            <option value="cube-tex">textured cube</option>
+                            {
+                                models.map
+                                (
+                                    (model) => 
+                                    (
+                                        <option key={model.model_id} value={model.name}>
+                                            {model.display_name}
+                                        </option>
+                                    )
+                                )
+                            }
                         </select>
                         <input type="submit" />
                     </form>
@@ -55,4 +62,4 @@ const Canvas = () => {
     )
 }
 
-export default Canvas;
+export default ModelForm;
