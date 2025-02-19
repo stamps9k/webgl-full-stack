@@ -45,9 +45,12 @@ var shader_set_shaders_query_string = "SELECT " +
     "shader_sets.name AS shader_set_name, " +
     "shaders.shader_id AS shader_id, " +
     "shaders.name AS shader_name, " +
+    "shader_types.name AS shader_type, " +
     "shaders.description AS shader_description, " +
     "shaders.display_name AS shader_display_name " +
-    "FROM shader_sets INNER JOIN shaders ON shader_sets.shader_set_id = shaders.shader_set_id " +
+    "FROM shader_sets " + 
+    "INNER JOIN shaders ON shader_sets.shader_set_id = shaders.shader_set_id " +
+    "INNER JOIN shader_types ON shaders.shader_type_id = shader_types.shader_type_id " +
     "WHERE shader_sets.name = ?;";
 
 const model_shader_sets_query_promise = (model_name) => {
