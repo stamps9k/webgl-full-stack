@@ -25,9 +25,9 @@ const db = new sqlite3.Database(dbPath, (err) =>
 
 const models_routes = express.Router();
 
-var model_shaders_query_string = "SELECT models.model_id, models.name AS model_name, shaders.shader_id, shaders.name AS shader_name, shaders.description AS shader_description, shaders.display_name AS shader_display_name FROM models " +
-    "INNER JOIN models_shaders ON models.model_id = models_shaders.model_id " +
-    "INNER JOIN shaders ON models_shaders.shader_id = shaders.shader_id " +
+var model_shader_sets_query_string = "SELECT models.model_id, models.name AS model_name, shader_sets.shader_set_id, shader_sets.name AS shader_set_name, shader_sets.description AS shader_set_description, shader_sets.display_name AS shader_set_display_name FROM models " +
+    "INNER JOIN models_shader_sets ON models.model_id = models_shader_sets.model_id " +
+    "INNER JOIN shader_sets ON models_shader_sets.shader_set_id = shader_sets.shader_set_id " +
     "WHERE models.name = ?;";
 
 var model_info_query_string = "SELECT models.model_id, models.name AS model_name, models.description AS model_description FROM models " +
@@ -40,23 +40,23 @@ var models_query_string = "SELECT " +
     "models.description AS description " +
     "FROM models;";
 
-const model_shaders_query_promise = (model_name) => {
+const model_shader_sets_query_promise = (model_name) => {
     return new Promise
     (
         (resolve, reject) => {
-            super_verbose("Running query " + model_shaders_query_string + "...");
+            super_verbose("Running query " + model_shader_sets_query_string + "...");
             const results = [];
             db.each
             (
-                model_shaders_query_string,
+                model_shader_sets_query_string,
                 model_name,
                 (err, row) =>
                 {
                     var tmp = {};
-                    tmp["shader_id"] = row.shader_id;
-                    tmp["name"] = row.shader_name;
-                    tmp["description"] = row.shader_description;
-                    tmp["display_name"] = row.shader_display_name;
+                    tmp["shader_id"] = row.shader_set_id;
+                    tmp["name"] = row.shader_set_name;
+                    tmp["description"] = row.shader_set_description;
+                    tmp["display_name"] = row.shader_set_display_name;
                     results.push(tmp);
                 },
                 (err, count) =>
@@ -173,7 +173,7 @@ models_routes.get('/api/model/model_info', async (req, res) => {
 });
 
 // API Route to get all shaders for a given model
-models_routes.get('/api/model/model_shaders', async (req, res) => {
+models_routes.get('/api/model/model_shader_sets', async (req, res) => {
     if (req.query.model_name == null || req.query.model_name == undefined)
     {
         var model_name = "cube.obj";
@@ -183,7 +183,7 @@ models_routes.get('/api/model/model_shaders', async (req, res) => {
     try
     {
         verbose("Querying database...");
-        var message = await model_shaders_query_promise(model_name);
+        var message = await model_shader_sets_query_promise(model_name);
         verbose("...database query complete.");
         super_super_verbose("Returning " + JSON.stringify(message));
         res.json({ success: true, message });

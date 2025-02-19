@@ -5,7 +5,7 @@ import { Collapse } from "bootstrap";
 const ModelForm = () => {
     const [toggle, setToggle] = useState(false);
     const [models, set_models] = useState([{model_id: 1, name: "cube.obj", display_name: "Cube"}]);
-    const [shaders, set_shaders] = useState([{shader_id: 1, name: "vert-color", display_name: "Colored Vertices"}]);
+    const [shaders, set_shaders] = useState([{shader_set_id: 1, name: "vert-color", display_name: "Colored Vertices"}]);
 
     const { search } = useLocation();
     const params = new URLSearchParams(search);
@@ -37,7 +37,7 @@ const ModelForm = () => {
     }, []);
 
     useEffect(() => {
-        fetch("/api/model/model_shaders?model_name=" + paramMap.get("model"))
+        fetch("/api/model/model_shader_sets?model_name=" + paramMap.get("model"))
             .then(response => response.json())
             .then(data => {
                 console.log(data);
