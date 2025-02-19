@@ -40,6 +40,16 @@ var models_query_string = "SELECT " +
     "models.description AS description " +
     "FROM models;";
 
+var shader_set_shaders_query_string = "SELECT " + 
+    "shader_sets.shader_set_id AS shader_set_id, " +
+    "shader_sets.name AS shader_set_name, " +
+    "shaders.shader_id AS shader_id, " +
+    "shaders.name AS shader_name, " +
+    "shaders.description AS shader_description, " +
+    "shaders.display_name AS shader_display_name " +
+    "FROM shader_sets INNER JOIN shaders ON shader_sets.shader_set_id = shaders.shader_set_id " +
+    "WHERE shader_sets.name = ?;";
+
 const model_shader_sets_query_promise = (model_name) => {
     return new Promise
     (
@@ -130,6 +140,35 @@ const models_query_promise = () => {
     )
 }
 
+const shader_set_shaders_query_promise = (shader_set_name) => {
+    return new Promise
+    (
+        (resolve, reject) => {
+            super_verbose("Running query " + shader_set_shaders_query_string + "...");
+            const results = [];
+            db.each
+            (
+                shader_set_shaders_query_string,
+                shader_set_name,
+                (err, row) =>
+                {
+                    var tmp = {};
+                    tmp["shader_id"] = row.shader_id;
+                    tmp["name"] = row.shader_name;
+                    tmp["description"] = row.shader_description;
+                    tmp["display_name"] = row.shader_display_name;
+                    results.push(tmp);
+                },
+                (err, count) =>
+                {
+                    resolve(results);
+                }
+            );
+            super_verbose("... query completed.");
+        }
+    )
+}
+
 models_routes.get('/api/model/models', async (req, res) => {
     info("Processing request: " + req.url);
     try
@@ -172,7 +211,7 @@ models_routes.get('/api/model/model_info', async (req, res) => {
     }
 });
 
-// API Route to get all shaders for a given model
+// API Route to get all shader sets for a given model
 models_routes.get('/api/model/model_shader_sets', async (req, res) => {
     if (req.query.model_name == null || req.query.model_name == undefined)
     {
@@ -184,6 +223,29 @@ models_routes.get('/api/model/model_shader_sets', async (req, res) => {
     {
         verbose("Querying database...");
         var message = await model_shader_sets_query_promise(model_name);
+        verbose("...database query complete.");
+        super_super_verbose("Returning " + JSON.stringify(message));
+        res.json({ success: true, message });
+    } 
+    catch (err)
+    {
+        error("Error processing query: " + err); 
+        res.status(500).json({ success: false, error: err.message });  
+    }
+});
+
+// API Route to get all shaders for a given shader set
+models_routes.get('/api/model/shader_set_shaders', async (req, res) => {
+    if (req.query.shader_set_name == null || req.query.shader_set_name == undefined)
+    {
+        var shader_set_name = "vert-colors";
+    } else {
+        var shader_set_name = req.query.shader_set_name;
+    }
+    try
+    {
+        verbose("Querying database...");
+        var message = await shader_set_shaders_query_promise(shader_set_name);
         verbose("...database query complete.");
         super_super_verbose("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
