@@ -61,6 +61,19 @@ var shader_set_shaders_query_string = (
     "WHERE shader_sets.name = ?;"
 );
 
+var model_textures_query_string = (
+    "SELECT models.model_id, " + 
+    "models.name AS model_name, " + 
+    "textures.texture_id, " +
+    "textures.name AS texture_name, " +
+    "textures.description AS texture_description, " +
+    "textures.display_name AS texture_display_name " +
+    "FROM models " +
+    "INNER JOIN models_textures ON models.model_id = models_textures.model_id " +
+    "INNER JOIN textures ON models_textures.texture_id = textures.texture_id " +
+    "WHERE models.name = ?;"
+);
+
 const model_shader_sets_query_promise = (model_name) => {
     return new Promise
     (
@@ -181,6 +194,35 @@ const shader_set_shaders_query_promise = (shader_set_name) => {
     )
 }
 
+const model_textures_query_promise = (model_name) => {
+    return new Promise
+    (
+        (resolve, reject) => {
+            super_verbose("Running query " + model_textures_query_string + "...");
+            const results = [];
+            db.each
+            (
+                model_textures_query_string,
+                model_name,
+                (err, row) =>
+                {
+                    var tmp = {};
+                    tmp["texture_id"] = row.texture_id;
+                    tmp["name"] = row.texture_name;
+                    tmp["description"] = row.texture_description;
+                    tmp["display_name"] = row.texture_display_name;
+                    results.push(tmp);
+                },
+                (err, count) =>
+                {
+                    resolve(results);
+                }
+            );
+            super_verbose("... query completed.");
+        }
+    )
+}
+
 models_routes.get('/api/model/models', async (req, res) => {
     info("Processing request: " + req.url);
     try
@@ -235,6 +277,29 @@ models_routes.get('/api/model/model_shader_sets', async (req, res) => {
     {
         verbose("Querying database...");
         var message = await model_shader_sets_query_promise(model_name);
+        verbose("...database query complete.");
+        super_super_verbose("Returning " + JSON.stringify(message));
+        res.json({ success: true, message });
+    } 
+    catch (err)
+    {
+        error("Error processing query: " + err); 
+        res.status(500).json({ success: false, error: err.message });  
+    }
+});
+
+// API Route to get all textures for a given model
+models_routes.get('/api/model/model_textures', async (req, res) => {
+    if (req.query.model_name == null || req.query.model_name == undefined)
+    {
+        var model_name = "cube.obj";
+    } else {
+        var model_name = req.query.model_name;
+    }
+    try
+    {
+        verbose("Querying database...");
+        var message = await model_textures_query_promise(model_name);
         verbose("...database query complete.");
         super_super_verbose("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
