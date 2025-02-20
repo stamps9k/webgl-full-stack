@@ -66,7 +66,7 @@ const model_shader_sets_query_promise = (model_name) => {
                 (err, row) =>
                 {
                     var tmp = {};
-                    tmp["shader_id"] = row.shader_set_id;
+                    tmp["shader_set_id"] = row.shader_set_id;
                     tmp["name"] = row.shader_set_name;
                     tmp["description"] = row.shader_set_description;
                     tmp["display_name"] = row.shader_set_display_name;
