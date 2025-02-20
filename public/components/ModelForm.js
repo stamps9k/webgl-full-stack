@@ -22,9 +22,9 @@ const ModelForm = () => {
     {
         paramMap.set("model", "cube.obj");
     }
-    if (paramMap.get("shader") == undefined)
+    if (paramMap.get("shader_set") == undefined)
     {
-        paramMap.set("shader", "vert-color");
+        paramMap.set("shader_set", "vert-color");
     }
 
     useEffect(() => {
