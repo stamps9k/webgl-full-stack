@@ -158,6 +158,7 @@ const shader_set_shaders_query_promise = (shader_set_name) => {
                     var tmp = {};
                     tmp["shader_id"] = row.shader_id;
                     tmp["name"] = row.shader_name;
+                    tmp["shader_type"] = row.shader_type;
                     tmp["description"] = row.shader_description;
                     tmp["display_name"] = row.shader_display_name;
                     results.push(tmp);
