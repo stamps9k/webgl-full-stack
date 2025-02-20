@@ -25,22 +25,29 @@ const db = new sqlite3.Database(dbPath, (err) =>
 
 const models_routes = express.Router();
 
-var model_shader_sets_query_string = "SELECT models.model_id, models.name AS model_name, shader_sets.shader_set_id, shader_sets.name AS shader_set_name, shader_sets.description AS shader_set_description, shader_sets.display_name AS shader_set_display_name FROM models " +
+var model_shader_sets_query_string = (
+    "SELECT models.model_id, models.name AS model_name, shader_sets.shader_set_id, shader_sets.name AS shader_set_name, shader_sets.description AS shader_set_description, shader_sets.display_name AS shader_set_display_name FROM models " +
     "INNER JOIN models_shader_sets ON models.model_id = models_shader_sets.model_id " +
     "INNER JOIN shader_sets ON models_shader_sets.shader_set_id = shader_sets.shader_set_id " +
-    "WHERE models.name = ?;";
+    "WHERE models.name = ?;"
+);
 
-var model_info_query_string = "SELECT models.model_id, models.name AS model_name, models.description AS model_description FROM models " +
-    "WHERE models.model_id = ?;";
+var model_info_query_string = (
+    "SELECT models.model_id, models.name AS model_name, models.description AS model_description FROM models " +
+    "WHERE models.model_id = ?;"
+);
 
-var models_query_string = "SELECT " +
-    "models.model_id AS model_id, " +
-    "models.name AS name, " +
-    "models.display_name AS display_name, " +
-    "models.description AS description " +
-    "FROM models;";
+var models_query_string = (
+        "SELECT " +
+        "models.model_id AS model_id, " +
+        "models.name AS name, " +
+        "models.display_name AS display_name, " +
+        "models.description AS description " +
+        "FROM models;"
+);
 
-var shader_set_shaders_query_string = "SELECT " + 
+var shader_set_shaders_query_string = (
+    "SELECT " + 
     "shader_sets.shader_set_id AS shader_set_id, " +
     "shader_sets.name AS shader_set_name, " +
     "shaders.shader_id AS shader_id, " +
@@ -51,7 +58,8 @@ var shader_set_shaders_query_string = "SELECT " +
     "FROM shader_sets " + 
     "INNER JOIN shaders ON shader_sets.shader_set_id = shaders.shader_set_id " +
     "INNER JOIN shader_types ON shaders.shader_type_id = shader_types.shader_type_id " +
-    "WHERE shader_sets.name = ?;";
+    "WHERE shader_sets.name = ?;"
+);
 
 const model_shader_sets_query_promise = (model_name) => {
     return new Promise
