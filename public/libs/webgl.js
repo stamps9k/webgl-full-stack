@@ -39,36 +39,62 @@ function update_rotate_z(event) {
 }
 window.update_rotate_z = update_rotate_z;
 
-function fetch_vert_shader() {
-	const url_params = new URLSearchParams(window.location.search);
-	if (url_params.get('shader') == null) 
-	{
-		var vert_shader = "vert-color.vert";
-	} else {
-		var vert_shader = url_params.get('shader') + ".vert";
-	}
-	info("Loading shader " + vert_shader + "...");
-	fetch('assets/' + vert_shader)
-        .then(response => response.text())
-        .then(text => {
-			info("... vert shader loaded");
-        	verbose("Shader text is:");
-        	verbose(text);
-			var resources = new Map();
-			resources.set("vert_shader", text);
-			fetch_frag_shader(resources);
-		})
-        .catch(error => console.error("Error fetching data:", error));
+function get_shader_names()
+{
+	return new Promise((resolve) => {
+		const url_params = new URLSearchParams(window.location.search);
+		if (url_params.get('shader_set') == null) 
+		{
+			var vert_shader = "vert-color";
+		} else {
+			var vert_shader = url_params.get('shader_set');
+		}
+
+		fetch('api/model/shader_set_shaders?shader_set_name=' + vert_shader)
+			.then(response => response.json())
+			.then(text => {
+				info("...API responded.");
+				verbose("Full API response is:");
+				verbose(text);
+				var resources = new Map();
+				text.message.forEach((shader_info) => {
+					if (shader_info.shader_type == "vert")
+					{
+						resources.set("vert_shader", shader_info.name);
+					} 
+					else if (shader_info.shader_type == "frag")
+					{
+						resources.set("frag_shader", shader_info.name);
+					}
+				});
+				resolve(resources);
+			})
+			.catch(error => console.error("Error fetching data:", error));
+	});
 }
 
-function fetch_frag_shader(resources) {
-	const url_params = new URLSearchParams(window.location.search);
-	if (url_params.get('shader') == null) 
-	{
-		var frag_shader = "vert-color.frag";
-	} else {
-		var frag_shader = url_params.get('shader') + ".frag";
-	}
+function fetch_vert_shader() {
+	var shaders = get_shader_names()
+		.then(shaders => {
+			var vert_shader = shaders.get("vert_shader");
+			info("Loading shader " + vert_shader + "...");
+			fetch('assets/' + vert_shader)
+				.then(response => response.text())
+				.then(text => {
+					info("... vert shader loaded");
+					verbose("Shader text is:");
+					verbose(text);
+					var resources = new Map();
+					resources.set("vert_shader", text);
+					fetch_frag_shader(resources, shaders);
+				})
+				.catch(error => console.error("Error fetching data:", error));
+	
+		});
+}
+
+function fetch_frag_shader(resources, shaders) {
+	var frag_shader = shaders.get("frag_shader");
 	info("Loading shader " + frag_shader + "...");
 	fetch('assets/' + frag_shader)
         .then(response => response.text())
