@@ -6,6 +6,7 @@ const ModelForm = () => {
     const [toggle, setToggle] = useState(false);
     const [models, set_models] = useState([{model_id: 1, name: "cube.obj", display_name: "Cube"}]);
     const [shader_sets, set_shader_sets] = useState([{shader_set_id: 1, name: "vert-color", display_name: "Colored Vertices"}]);
+    const [textures, set_textures] = useState([{texture_id: 1, name: "cube.tex", display_name: "Dice Texture"}]);
 
     const { search } = useLocation();
     const params = new URLSearchParams(search);
@@ -41,6 +42,15 @@ const ModelForm = () => {
             .then(response => response.json())
             .then(data => {
                 set_shader_sets(data.message);
+            })
+            .catch(error => console.error("Error fetching data:", error));
+    }, []);
+
+    useEffect(() => {
+        fetch("/api/model/model_textures?model_name=" + paramMap.get("model"))
+            .then(response => response.json())
+            .then(data => {
+                set_textures(data.message);
             })
             .catch(error => console.error("Error fetching data:", error));
     }, []);
@@ -85,24 +95,44 @@ const ModelForm = () => {
                         </div>
                         </div>
                         <div id="shaderRow" className="ms-auto text-start py-1 row">
-                        <div id="shaderLabel" className="col-1"> 
-                        <label htmlFor="shader">Shader: </label>
+                            <div id="shaderLabel" className="col-1"> 
+                                <label htmlFor="shader">Shader: </label>
+                            </div>
+                            <div id="shaderElement" className="col-1">
+                                <select id="shader" name="shader">
+                                    {
+                                        shader_sets.map
+                                        (
+                                            (shader_set) => 
+                                            (
+                                                <option key={shader_set.shader_set_id} value={shader_set.name}>
+                                                    {shader_set.display_name}
+                                                </option>
+                                            )
+                                        )
+                                    }
+                                </select>
+                            </div>
                         </div>
-                        <div id="shaderElement" className="col-1">
-                        <select id="shader" name="shader">
-                            {
-                                shader_sets.map
-                                (
-                                    (shader_set) => 
-                                    (
-                                        <option key={shader_set.shader_set_id} value={shader_set.name}>
-                                            {shader_set.display_name}
-                                        </option>
-                                    )
-                                )
-                            }
-                        </select>
-                        </div>
+                        <div id="textureRow" className="ms-auto text-start py-1 row">
+                            <div id="textureLabel" className="col-1"> 
+                                <label htmlFor="texture">Texture: </label>
+                            </div>
+                            <div id="textureElement" className="col-1">
+                                <select id="texture" name="texture">
+                                    {
+                                        textures.map
+                                        (
+                                            (texture) => 
+                                            (
+                                                <option key={texture.shader_set_id} value={texture.name}>
+                                                    {texture.display_name}
+                                                </option>
+                                            )
+                                        )
+                                    }
+                                </select>
+                            </div>
                         </div>
                         <div id="submitRow" className="ms-auto py-1 row">
                         <div className="col-1 mx-1">
