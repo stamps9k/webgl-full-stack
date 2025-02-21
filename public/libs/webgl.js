@@ -124,38 +124,42 @@ function fetch_model(resources) {
         	verbose("Model text is:");
         	verbose(text);
         	resources.set("cube", text);
-			init(resources);
+			if (url_params.get("texture") == undefined)
+			{
+				init(resources);
+			}
+			else
+			{
+				fetch_texture(resources);
+			}
 		})
         .catch(error => console.error("Error fetching data:", error));
 }
 
 function fetch_texture(resources) {
 	const url_params = new URLSearchParams(window.location.search);
-	const model = url_params.get('model');
-	var url = "textures/" + model + ".tex"; 
-	info("Loading texture " + url + "...");
-    $.ajax({
-        url: url,
-		processData: false,
-		dataType: "binary",
-        success: function(result) {
-			info("... texture loaded");
-			info("Converting texture to Base64 String...");
-			var result_b = new Uint8Array(result);
-			const binString = Array.from(result_b, (byte) =>
-				String.fromCodePoint(byte),
-			).join("");
-			var result_b64 = btoa(binString);
-			info("... texture stringified.");
-			verbose("Full string is:");
-			verbose(result_b64);
-            resources.set("texture", result_b64);
-			init(resources);
-        },
-        error: function(result) {
-            error("... failed to fetch texture. Error is " + result.status + ": " + result.statusText);
-        }
-    });
+	if (url_params.get('model') == null) 
+	{
+		var texture = "cube.tex";
+	} else {
+		var texture = url_params.get('texture');
+	}
+	info("Loading texture " + texture + "...");
+	fetch('assets/' + texture)
+	.then(response => response.arrayBuffer())
+	.then(arrayBuffer => {
+		var result_b = new Uint8Array(arrayBuffer);
+		const binString = Array.from(result_b, (byte) =>
+			String.fromCodePoint(byte),
+		).join("");
+		var result_b64 = btoa(binString);
+		info("... texture loaded");
+		verbose("B64 Encoded  texture is:");
+		verbose(result_b64);
+		resources.set("texture", result_b64);
+		init(resources);
+	})
+	.catch(error => console.error("Error fetching data:", error));
 }
 
 function init(resources) {
