@@ -8,6 +8,23 @@ const ModelForm = () => {
     const [shader_sets, set_shader_sets] = useState([{shader_set_id: 1, name: "vert-color", display_name: "Colored Vertices"}]);
     const [textures, set_textures] = useState([{texture_id: 1, name: "cube.tex", display_name: "Dice Texture"}]);
 
+    const handle_model_change = ((e) => {
+        fetch("/api/model/model_shader_sets?model_name=" + e.target.value)
+            .then(response => response.json())
+            .then(data => {
+                set_shader_sets(data.message);
+            })
+            .catch(error => console.error("Error fetching data:", error))
+        ;
+        fetch("/api/model/model_textures?model_name=" + e.target.value)
+            .then(response => response.json())
+            .then(data => {
+                set_textures(data.message);
+            })
+            .catch(error => console.error("Error fetching data:", error))
+        ;
+    });
+
     const { search } = useLocation();
     const params = new URLSearchParams(search);
         
@@ -16,7 +33,6 @@ const ModelForm = () => {
     for (const [key, value] of params.entries()) {
         paramMap.set(key, value);
     }
-
 
     //Add default model if not set
     if (paramMap.get("model") == undefined)
@@ -28,38 +44,41 @@ const ModelForm = () => {
         paramMap.set("shader_set", "vert-color");
     }
 
-    useEffect(() => {
-        fetch("/api/model/models")
-            .then(response => response.json())
-            .then(data => {
-                set_models(data.message);
-            })
-            .catch(error => console.error("Error fetching data:", error));
-    }, []);
+    //Get initial values for form
+    useEffect
+    (
+        () => {
+            fetch("/api/model/models")
+                .then(response => response.json())
+                .then(data => {
+                    set_models(data.message);
+                })
+                .catch(error => console.error("Error fetching data:", error))
+            ;
+            fetch("/api/model/model_shader_sets?model_name=" + paramMap.get("model"))
+                .then(response => response.json())
+                .then(data => {
+                    set_shader_sets(data.message);
+                })
+                .catch(error => console.error("Error fetching data:", error))
+            ;
+            fetch("/api/model/model_textures?model_name=" + paramMap.get("model"))
+                .then(response => response.json())
+                .then(data => {
+                    set_textures(data.message);
+                })
+                .catch(error => console.error("Error fetching data:", error))
+            ;
+        }, 
+        []
+    );
 
-    useEffect(() => {
-        fetch("/api/model/model_shader_sets?model_name=" + paramMap.get("model"))
-            .then(response => response.json())
-            .then(data => {
-                set_shader_sets(data.message);
-            })
-            .catch(error => console.error("Error fetching data:", error));
-    }, []);
-
-    useEffect(() => {
-        fetch("/api/model/model_textures?model_name=" + paramMap.get("model"))
-            .then(response => response.json())
-            .then(data => {
-                set_textures(data.message);
-            })
-            .catch(error => console.error("Error fetching data:", error));
-    }, []);
-
+    //Activate collapse effect 
     useEffect(() => {
         var myCollapse = document.getElementById('collapseOne')
         var bsCollapse = new Collapse(myCollapse, {toggle: false})
         toggle ? bsCollapse.show() : bsCollapse.hide()
-    })
+    }, []);
 
     return (
         <div>
@@ -79,7 +98,7 @@ const ModelForm = () => {
                             <label htmlFor="model">Model: </label>
                         </div>
                         <div id="modelElement" className="col-1">
-                        <select id="model" name="model">
+                        <select id="model" name="model" onChange={handle_model_change}>
                             {
                                 models.map
                                 (
@@ -99,7 +118,7 @@ const ModelForm = () => {
                                 <label htmlFor="shader">Shader: </label>
                             </div>
                             <div id="shaderElement" className="col-1">
-                                <select id="shader" name="shader">
+                                <select id="shader_set" name="shader_set">
                                     {
                                         shader_sets.map
                                         (
@@ -125,7 +144,7 @@ const ModelForm = () => {
                                         (
                                             (texture) => 
                                             (
-                                                <option key={texture.shader_set_id} value={texture.name}>
+                                                <option key={texture.texture_id} value={texture.name}>
                                                     {texture.display_name}
                                                 </option>
                                             )
