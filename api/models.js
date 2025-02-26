@@ -56,7 +56,8 @@ var shader_set_shaders_query_string = (
     "shaders.description AS shader_description, " +
     "shaders.display_name AS shader_display_name " +
     "FROM shader_sets " + 
-    "INNER JOIN shaders ON shader_sets.shader_set_id = shaders.shader_set_id " +
+    "INNER JOIN shader_sets_shaders ON shader_sets.shader_set_id = shader_sets_shaders.shader_set_id " +
+    "INNER JOIN shaders ON shader_sets_shaders.shader_id = shaders.shader_id " +
     "INNER JOIN shader_types ON shaders.shader_type_id = shader_types.shader_type_id " +
     "WHERE shader_sets.name = ?;"
 );
