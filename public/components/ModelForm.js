@@ -1,11 +1,11 @@
-import React, { useEffect, useState, createContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Collapse } from "bootstrap";
 
 import ModelFormRow from "./ModelFormRow.js";
 import TextureFormRow from "./TextureFormRow.js";
 import ShaderSetFormRow from "./ShaderSetFormRow.js";
-import { ModelFormContext, ModelFormContextProvider } from '../contexts/ModelFormContext.js';
+import { ModelFormContextProvider } from '../contexts/ModelFormContext.js';
 
 const ModelForm = () => {
     const [toggle, setToggle] = useState(false);

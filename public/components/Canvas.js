@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-
+import { useEffect } from "react";
 import ModelForm from "./ModelForm.js";
 import * as webgl from "../libs/webgl.js";
 
