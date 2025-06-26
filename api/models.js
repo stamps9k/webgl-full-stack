@@ -268,6 +268,7 @@ models_routes.get('/api/model/model_info', async (req, res) => {
 
 // API Route to get all shader sets for a given model
 models_routes.get('/api/model/model_shader_sets', async (req, res) => {
+    info("Processing request: " + req.url);
     if (req.query.model_name == null || req.query.model_name == undefined)
     {
         var model_name = "cube.obj";
@@ -291,6 +292,7 @@ models_routes.get('/api/model/model_shader_sets', async (req, res) => {
 
 // API Route to get all textures for a given model
 models_routes.get('/api/model/model_textures', async (req, res) => {
+    info("Processing request: " + req.url);
     if (req.query.model_name == null || req.query.model_name == undefined)
     {
         var model_name = "cube.obj";
@@ -314,6 +316,7 @@ models_routes.get('/api/model/model_textures', async (req, res) => {
 
 // API Route to get all shaders for a given shader set
 models_routes.get('/api/model/shader_set_shaders', async (req, res) => {
+    info("Processing request: " + req.url);
     if (req.query.shader_set_name == null || req.query.shader_set_name == undefined)
     {
         var shader_set_name = "vert-colors";
