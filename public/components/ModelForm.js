@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Collapse } from "bootstrap";
 
+import ModelFormRow from "./ModelFormRow.js";
+import TextureFormRow from "./TextureFormRow.js";
+import ShaderSetFormRow from "./ShaderSetFormRow.js";
+import { ModelFormContext, ModelFormContextProvider } from '../contexts/ModelFormContext.js';
+
 const ModelForm = () => {
     const [toggle, setToggle] = useState(false);
-    const [models, set_models] = useState([{model_id: 1, name: "cube.obj", display_name: "Cube"}]);
-    const [shader_sets, set_shader_sets] = useState([{shader_set_id: 1, name: "vert-color", display_name: "Colored Vertices"}]);
-    const [textures, set_textures] = useState([{texture_id: 1, name: "cube.tex", display_name: "Dice Texture"}]);
-
-    const handle_model_change = ((e) => {
-        fetch("/api/model/model_shader_sets?model_name=" + e.target.value)
-            .then(response => response.json())
-            .then(data => {
-                set_shader_sets(data.message);
-            })
-            .catch(error => console.error("Error fetching data:", error))
-        ;
-        fetch("/api/model/model_textures?model_name=" + e.target.value)
-            .then(response => response.json())
-            .then(data => {
-                set_textures(data.message);
-            })
-            .catch(error => console.error("Error fetching data:", error))
-        ;
-    });
 
     const { search } = useLocation();
     const params = new URLSearchParams(search);
@@ -44,35 +29,6 @@ const ModelForm = () => {
         paramMap.set("shader_set", "vert-color");
     }
 
-    //Get initial values for form
-    useEffect
-    (
-        () => {
-            fetch("/api/model/models")
-                .then(response => response.json())
-                .then(data => {
-                    set_models(data.message);
-                })
-                .catch(error => console.error("Error fetching data:", error))
-            ;
-            fetch("/api/model/model_shader_sets?model_name=" + paramMap.get("model"))
-                .then(response => response.json())
-                .then(data => {
-                    set_shader_sets(data.message);
-                })
-                .catch(error => console.error("Error fetching data:", error))
-            ;
-            fetch("/api/model/model_textures?model_name=" + paramMap.get("model"))
-                .then(response => response.json())
-                .then(data => {
-                    set_textures(data.message);
-                })
-                .catch(error => console.error("Error fetching data:", error))
-            ;
-        }, 
-        []
-    );
-
     //Activate collapse effect 
     useEffect(() => {
         var myCollapse = document.getElementById('collapseOne')
@@ -81,6 +37,7 @@ const ModelForm = () => {
     }, []);
 
     return (
+        <ModelFormContextProvider>
         <div>
             <div className="card-header py-3" id="collapseHeading">
                 <a className="btn btn-primary" data-bs-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
@@ -93,66 +50,9 @@ const ModelForm = () => {
                         <div id="headingRow" className="ms-auto text-start row">
                         <h3 htmlFor="model" className="text-decoration-underline">Model Selection</h3>
                         </div>
-                        <div id="modelRow" className="ms-auto text-start row">
-                        <div id="modelLabel" className="col-1">
-                            <label htmlFor="model">Model: </label>
-                        </div>
-                        <div id="modelElement" className="col-1">
-                        <select id="model" name="model" onChange={handle_model_change}>
-                            {
-                                models.map
-                                (
-                                    (model) => 
-                                    (
-                                        <option key={model.model_id} value={model.name}>
-                                            {model.display_name}
-                                        </option>
-                                    )
-                                )
-                            }
-                        </select>
-                        </div>
-                        </div>
-                        <div id="shaderRow" className="ms-auto text-start py-1 row">
-                            <div id="shaderLabel" className="col-1"> 
-                                <label htmlFor="shader">Shader: </label>
-                            </div>
-                            <div id="shaderElement" className="col-1">
-                                <select id="shader_set" name="shader_set">
-                                    {
-                                        shader_sets.map
-                                        (
-                                            (shader_set) => 
-                                            (
-                                                <option key={shader_set.shader_set_id} value={shader_set.name}>
-                                                    {shader_set.display_name}
-                                                </option>
-                                            )
-                                        )
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div id="textureRow" className="ms-auto text-start py-1 row">
-                            <div id="textureLabel" className="col-1"> 
-                                <label htmlFor="texture">Texture: </label>
-                            </div>
-                            <div id="textureElement" className="col-1">
-                                <select id="texture" name="texture">
-                                    {
-                                        textures.map
-                                        (
-                                            (texture) => 
-                                            (
-                                                <option key={texture.texture_id} value={texture.name}>
-                                                    {texture.display_name}
-                                                </option>
-                                            )
-                                        )
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                        <ModelFormRow />
+                        <ShaderSetFormRow />
+                        <TextureFormRow />
                         <div id="submitRow" className="ms-auto py-1 row">
                         <div className="col-1 mx-1">
                         <button className="btn btn-success">Submit</button>
@@ -162,6 +62,7 @@ const ModelForm = () => {
                 </div>
             </div>
         </div>
+        </ModelFormContextProvider>
     )
 }
 
