@@ -45,12 +45,13 @@ function get_shader_names()
 		const url_params = new URLSearchParams(window.location.search);
 		if (url_params.get('shader_set') == null) 
 		{
-			var vert_shader = "vert-color";
+			var shader_set_name = "vert-color";
 		} else {
-			var vert_shader = url_params.get('shader_set');
+			var shader_set_name = url_params.get('shader_set');
 		}
 
-		fetch('api/model/shader_set_shaders?shader_set_name=' + vert_shader)
+		info("Fetching shader names for set " + shader_set_name);
+		fetch('api/model/shader_set_shaders?shader_set_name=' + shader_set_name)
 			.then(response => response.json())
 			.then(text => {
 				info("...API responded.");
