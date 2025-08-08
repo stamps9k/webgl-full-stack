@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Collapse } from "bootstrap";
 
+import ModelFilePicker from "./ModelFilePicker.js";
 import ModelFormRow from "./ModelFormRow.js";
 import TextureFormRow from "./TextureFormRow.js";
 import ShaderSetFormRow from "./ShaderSetFormRow.js";
@@ -39,10 +40,17 @@ const ModelForm = () => {
     return (
         <ModelFormContextProvider>
         <div>
-            <div className="card-header py-3" id="collapseHeading">
-                <a className="btn btn-primary" data-bs-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    Choose Model
-                </a>
+            <div className="card-header py-3 row justify-content-center" id="collapseHeading">
+                <div className="col-3">
+                    <a className="btn btn-primary" data-bs-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        Choose Model
+                    </a>
+                </div>
+                <div className="col-3">
+                    <a className="btn btn-primary" data-bs-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseOne">
+                        Upload Model
+                    </a>
+                </div>
             </div>
             <div id="collapseOne" className="collapse py-3" >
                 <div className="border border-light card-body py-1">
@@ -59,6 +67,11 @@ const ModelForm = () => {
                         </div>
                         </div>
                         </form>
+                </div>
+            </div>
+            <div id="collapseTwo" className="collapse py-3" >
+                <div className="border border-light card-body py-1">
+                    <ModelFilePicker />
                 </div>
             </div>
         </div>
