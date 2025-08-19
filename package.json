@@ -2,7 +2,7 @@
   "name": "webgl-full-stack",
   "version": "1.0.0",
   "description": "A full stack implementation of my previous static webgl project",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
     "prod": "node server.js",
