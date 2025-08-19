@@ -27,7 +27,7 @@ app.use(models);
 // API Fallback API Response
 app.get('/api/*', (req, res) => {
     res.status(404);
-    res.json({ message: 'Unknown API endpint' });
+    res.json({ message: 'Unknown API endpoint' });
 });
 
 // Catch-all for SPA (React)
