@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 
 import { ModelFormContext } from '../contexts/ModelFormContext.js';
 
@@ -19,7 +20,18 @@ const ModelFormRow = () => {
 
         const file = input.files[0]; // The File object
 
-        fp.validate_file(file);
+        var validation_result = await fp.validate_file(file);
+        if (validation_result.valid === false) {
+            toast.error
+            (
+                <span>
+                    Upload failed:
+                    <br /> 
+                    {validation_result.error}
+                </span>
+            );
+            return;
+        }
         await fp.save_file(file)
         fp.process_file(file);
     });
@@ -28,6 +40,7 @@ const ModelFormRow = () => {
         <div id="fileRow" className="ms-auto text-start row-fluid px-2 py-1">
             <label htmlFor="formFile" className="form-label">Default file input example</label>
             <input className="form-control" type="file" id="formFile" onChange={handle_file_picked} />
+            <ToastContainer />
         </div>
     )    
 }
