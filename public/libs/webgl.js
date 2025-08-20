@@ -41,62 +41,84 @@ window.update_rotate_z = update_rotate_z;
 
 function get_shader_names()
 {
-	return new Promise((resolve) => {
-		const url_params = new URLSearchParams(window.location.search);
-		if (url_params.get('shader_set') == null) 
-		{
-			var shader_set_name = "vert-color";
-		} else {
-			var shader_set_name = url_params.get('shader_set');
-		}
+	return new Promise
+	(
+		(resolve) => {
+			const url_params = new URLSearchParams(window.location.search);
+			if (url_params.get('shader_set') == null) 
+			{
+				var shader_set_name = "vert-color";
+			} else {
+				var shader_set_name = url_params.get('shader_set');
+			}
 
-		info("Fetching shader names for set " + shader_set_name);
-		fetch('api/model/shader_set_shaders?shader_set_name=' + shader_set_name)
+			info("Fetching shader names for set " + shader_set_name);
+			fetch
+			(
+				'api/model/shader_set_shaders?shader_set_name=' + shader_set_name
+			)
 			.then
 			(
-				function(response) 
+				async function(response) 
 				{
-					//Check if the response is ok, if not log and throw an error
+					//Check if the response is ok, if not throw an error
 					if (!response.ok) 
 					{
-						error("Failed to fetch shader names for set " + shader_set_name);
 						throw new Error("Network response was not ok: " + response.statusText);
 					} 
+					//Check if the response is empty, if so log and throw an error
 					else 
 					{
-						return response.json();	
+						var response_json = await response.json();
+						if(response_json.message.length == 0) 
+						{
+							throw new Error("No shaders found for set " + shader_set_name);
+						} 
+						else
+						{
+							return response.json();	
+						}
 					}
 				},
 				function() {
-					//Log error if the fetch fails and throw an error
-					error("Failed to fetch shader names for set " + shader_set_name);
-					error("Error message: " + error.message);
+					//Throw an error if the fetch fails
 					throw new Error("Failed to fetch shader names for set " + shader_set_name);
 				}
 			)
-			.then(text => {
-				info("...API responded.");
-				verbose("Full API response is:");
-				verbose(text);
-				var resources = new Map();
-				text.message.forEach
-				(
-					(shader_info) => 
-					{
-						if (shader_info.shader_type == "vert")
+			.then
+			(
+				text => {
+					info("...API responded.");
+					verbose("Full API response is:");
+					verbose(text);
+					var resources = new Map();
+					text.message.forEach
+					(
+						(shader_info) => 
 						{
-							resources.set("vert_shader", shader_info.name);
-						} 
-						else if (shader_info.shader_type == "frag")
-						{
-							resources.set("frag_shader", shader_info.name);
+							if (shader_info.shader_type == "vert")
+							{
+								resources.set("vert_shader", shader_info.name);
+							} 
+							else if (shader_info.shader_type == "frag")
+							{
+								resources.set("frag_shader", shader_info.name);
+							}
 						}
-					}
-				);
-				resolve(resources);
-			})
-			.catch(error => console.error("Error fetching data:", error));
-	});
+					);
+					resolve(resources);
+				}
+			)
+			.catch
+			(
+				function(error_response)
+				{
+					error(error_response.message);
+					return null
+				} 
+			)
+		}
+	);
 }
 
 function fetch_vert_shader() {
