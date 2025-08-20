@@ -52,22 +52,47 @@ function get_shader_names()
 
 		info("Fetching shader names for set " + shader_set_name);
 		fetch('api/model/shader_set_shaders?shader_set_name=' + shader_set_name)
-			.then(response => response.json())
+			.then
+			(
+				function(response) 
+				{
+					//Check if the response is ok, if not log and throw an error
+					if (!response.ok) 
+					{
+						error("Failed to fetch shader names for set " + shader_set_name);
+						throw new Error("Network response was not ok: " + response.statusText);
+					} 
+					else 
+					{
+						return response.json();	
+					}
+				},
+				function() {
+					//Log error if the fetch fails and throw an error
+					error("Failed to fetch shader names for set " + shader_set_name);
+					error("Error message: " + error.message);
+					throw new Error("Failed to fetch shader names for set " + shader_set_name);
+				}
+			)
 			.then(text => {
 				info("...API responded.");
 				verbose("Full API response is:");
 				verbose(text);
 				var resources = new Map();
-				text.message.forEach((shader_info) => {
-					if (shader_info.shader_type == "vert")
+				text.message.forEach
+				(
+					(shader_info) => 
 					{
-						resources.set("vert_shader", shader_info.name);
-					} 
-					else if (shader_info.shader_type == "frag")
-					{
-						resources.set("frag_shader", shader_info.name);
+						if (shader_info.shader_type == "vert")
+						{
+							resources.set("vert_shader", shader_info.name);
+						} 
+						else if (shader_info.shader_type == "frag")
+						{
+							resources.set("frag_shader", shader_info.name);
+						}
 					}
-				});
+				);
 				resolve(resources);
 			})
 			.catch(error => console.error("Error fetching data:", error));
