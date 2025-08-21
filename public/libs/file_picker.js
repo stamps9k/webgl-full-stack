@@ -48,15 +48,21 @@ async function validate_file(file) {
 async function save_file(file) {
     const opfsRoot = await navigator.storage.getDirectory(); // OPFS root
 
-    // Create a new file in OPFS with the same name
-    const opfsHandle = await opfsRoot.getFileHandle(file.name, { create: true });
-    const writable = await opfsHandle.createWritable();
+    try {
+        // Create a new file in OPFS with the same name
+        const opfsHandle = await opfsRoot.getFileHandle(file.name, { create: true });
+        const writable = await opfsHandle.createWritable();
 
-    // Copy contents from uploaded file to OPFS
-    await writable.write(await file.arrayBuffer());
-    await writable.close();
+        // Copy contents from uploaded file to OPFS
+        await writable.write(await file.arrayBuffer());
+        await writable.close();
+    } catch (e) {
+        error(e);
+        return { valid: false, error: e };
+    }
 
     info(`Saved ${file.name} to OPFS!`);
+    return { valid: true };
 }
 
 function process_file(file) {
