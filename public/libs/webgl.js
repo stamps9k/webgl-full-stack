@@ -69,7 +69,9 @@ function get_shader_names()
 					//Check if the response is empty, if so log and throw an error
 					else 
 					{
-						var response_json = await response.json();
+						//Clone the response as the original response was already consumed
+						let clone = response.clone();
+						var response_json = await clone.json();
 						if(response_json.message.length == 0) 
 						{
 							throw new Error("No shaders found for set " + shader_set_name);
