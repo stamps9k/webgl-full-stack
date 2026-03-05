@@ -19,7 +19,7 @@ const ModelFormRow = () => {
         }
 
         const file = input.files[0]; // The File object
-
+        
         var validation_result = await fp.validate_file(file);
         if (validation_result.valid === false) {
             toast.error
@@ -33,7 +33,9 @@ const ModelFormRow = () => {
             return;
         }
         await fp.save_file(file)
-        fp.process_file(file);
+
+        //Read full file into memory and change the live model
+        await fp.process_file(file);
     });
 
     return (
