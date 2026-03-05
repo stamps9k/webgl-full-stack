@@ -1,4 +1,5 @@
 import { info, verbose, warn, error } from "./debug_config.js";
+import { view_model } from "./webgl.js";
 
 /**
  * Validates that the given file is a Blender OBJ file.
@@ -6,6 +7,12 @@ import { info, verbose, warn, error } from "./debug_config.js";
  * Returns a Promise resolving to { valid: boolean, error?: string }
  */
 async function validate_file(file) {
+    // Reject any files that are too big. 1048576 is 10MB in Bytes.
+    if (file.size > 10485760) {
+        error("Validation failed file is too large. Size is " + file.size)
+        return { valid: false, error: 'File is too large. Maximum vald size is 10MB.' };
+    }
+
     // Check extension
     if (!file.name.toLowerCase().endsWith('.obj')) {
         return { valid: false, error: 'File must have a .obj extension.' };
