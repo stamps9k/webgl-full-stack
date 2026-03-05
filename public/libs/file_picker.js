@@ -72,7 +72,7 @@ async function save_file(file) {
     return { valid: true };
 }
 
-function process_file(file) {
+async function process_file(file) {
     warn("TODO add file processing logic");
 }
 
