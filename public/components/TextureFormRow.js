@@ -51,8 +51,8 @@ const TextureFormRow = () => {
                             (
                                 (texture) => 
                                 (
-                                    <option key={texture.texture_id} value={texture.name}>
-                                        {texture.display_name}
+                                    <option key={texture.texture_id} value={texture.texture_name}>
+                                        {texture.texture_display_name}
                                     </option>
                                 )
                             )

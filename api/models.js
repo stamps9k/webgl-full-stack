@@ -1,7 +1,6 @@
 const path = require('path');
 const express = require('express');
 const { register } = require('module');
-const sqlite3 = require('sqlite3').verbose();
 
 //Define all posasible logging levels
 const super_super_verbose = require('debug')("app:SUPER_SUPER_VERBOSE");
@@ -13,15 +12,7 @@ const error = require('debug')("app:ERROR");
 
 
 const dbPath = path.resolve(__dirname, '../databases/app.db');
-const db = new sqlite3.Database(dbPath, (err) => 
-    {
-        if (err) {
-            console.error('Error opening database:', err.message);
-        } else {
-            console.log('Connected to the database.');
-        }
-    }
-);
+const db = require('better-sqlite3')(dbPath, { verbose: console.log });
 
 const models_routes = express.Router();
 
@@ -80,26 +71,9 @@ const model_shader_sets_query_promise = (model_name) => {
     (
         (resolve, reject) => {
             super_verbose("Running query " + model_shader_sets_query_string + "...");
-            const results = [];
-            db.each
-            (
-                model_shader_sets_query_string,
-                model_name,
-                (err, row) =>
-                {
-                    var tmp = {};
-                    tmp["shader_set_id"] = row.shader_set_id;
-                    tmp["name"] = row.shader_set_name;
-                    tmp["description"] = row.shader_set_description;
-                    tmp["display_name"] = row.shader_set_display_name;
-                    results.push(tmp);
-                },
-                (err, count) =>
-                {
-                    resolve(results);
-                }
-            );
+            const results = db.prepare(model_shader_sets_query_string).all(model_name)
             super_verbose("... query completed.");
+            resolve(results);
         }
     )
 }
@@ -109,25 +83,9 @@ const model_info_query_promise = (model_id) => {
     (
         (resolve, reject) => {
             super_verbose("Running query " + model_shaders_query_string + "...");
-            const results = [];
-            db.each
-            (
-                model_info_query_string, 
-                model_id,
-                (err, row) =>
-                {
-                    var tmp = {};
-                    tmp["id"] = row.model_id;
-                    tmp["name"] = row.model_name;
-                    tmp["description"] = row.model_description;
-                    results.push(tmp);
-                },
-                (err, count) =>
-                {
-                    resolve(results);
-                }
-            );
+            const results = db.prepare(model_shader_query_string).all(model_id);
             super_verbose("... query completed.");
+            resolve(results);
         }
     )
 }
@@ -137,30 +95,9 @@ const models_query_promise = () => {
     (
         (resolve, reject) => {
             super_verbose("Running query " + models_query_string + "...");
-            const results = [];
-            db.each
-            (
-                models_query_string,
-                (err, row) =>
-                {
-                    info("test");
-                    var tmp = {};
-                    tmp["model_id"] = row.model_id;
-                    tmp["name"] = row.name;
-                    tmp["display_name"] = row.display_name;
-                    tmp["description"] = row.description;
-                    results.push(tmp);
-                },
-                (err, count) =>
-                {
-                    if (count == undefined) {
-                        count = 0;
-                    }
-                    verbose("Query returned " + count + " results.")
-                    resolve(results);
-                }
-            );
+            const results = db.prepare(models_query_string).all();
             super_verbose("... query completed.");
+            resolve(results);
         }
     )
 }
@@ -170,27 +107,9 @@ const shader_set_shaders_query_promise = (shader_set_name) => {
     (
         (resolve, reject) => {
             super_verbose("Running query " + shader_set_shaders_query_string + "...");
-            const results = [];
-            db.each
-            (
-                shader_set_shaders_query_string,
-                shader_set_name,
-                (err, row) =>
-                {
-                    var tmp = {};
-                    tmp["shader_id"] = row.shader_id;
-                    tmp["name"] = row.shader_name;
-                    tmp["shader_type"] = row.shader_type;
-                    tmp["description"] = row.shader_description;
-                    tmp["display_name"] = row.shader_display_name;
-                    results.push(tmp);
-                },
-                (err, count) =>
-                {
-                    resolve(results);
-                }
-            );
+            const results = db.prepare(shader_set_shaders_query_string).all(shader_set_name);
             super_verbose("... query completed.");
+            resolve(results);
         }
     )
 }
@@ -200,26 +119,9 @@ const model_textures_query_promise = (model_name) => {
     (
         (resolve, reject) => {
             super_verbose("Running query " + model_textures_query_string + "...");
-            const results = [];
-            db.each
-            (
-                model_textures_query_string,
-                model_name,
-                (err, row) =>
-                {
-                    var tmp = {};
-                    tmp["texture_id"] = row.texture_id;
-                    tmp["name"] = row.texture_name;
-                    tmp["description"] = row.texture_description;
-                    tmp["display_name"] = row.texture_display_name;
-                    results.push(tmp);
-                },
-                (err, count) =>
-                {
-                    resolve(results);
-                }
-            );
+            const results = db.prepare(model_textures_query_string).all(model_name);
             super_verbose("... query completed.");
+            resolve(results);
         }
     )
 }

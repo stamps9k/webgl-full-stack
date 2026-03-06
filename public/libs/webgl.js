@@ -103,11 +103,11 @@ async function get_shader_names()
 						{
 							if (shader_info.shader_type == "vert")
 							{
-								resources.set("vert_shader", shader_info.name);
+								resources.set("vert_shader", shader_info.shader_name);
 							} 
 							else if (shader_info.shader_type == "frag")
 							{
-								resources.set("frag_shader", shader_info.name);
+								resources.set("frag_shader", shader_info.shader_name);
 							}
 						}
 					);
