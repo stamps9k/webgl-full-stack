@@ -211,7 +211,7 @@ function change_model(new_model) {
 	verbose("...resources map updated.");
 
 	verbose("Sending request for wasm to update scene on GPU...");
-	wasm.update_scene(engine, global_resources);
+	engine = wasm.update_scene(engine, global_resources);
 	verbose("...scene updated.");
 	info("...model updated");
 }
