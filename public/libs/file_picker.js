@@ -1,5 +1,5 @@
 import { info, verbose, warn, error } from "./debug_config.js";
-import { view_model } from "./webgl.js";
+import { change_model } from "./webgl.js";
 
 /**
  * Validates that the given file is a Blender OBJ file.
@@ -73,7 +73,13 @@ async function save_file(file) {
 }
 
 async function process_file(file) {
-    warn("TODO add file processing logic");
+    let text = await file.text();
+
+    // Update the model
+    change_model(text);
+
+    //Clean up
+    warn("TODO add file cleanup here.");
 }
 
 //export public facing functions
