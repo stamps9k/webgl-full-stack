@@ -1,6 +1,9 @@
 import * as wasm from "wasm-model-viewer-core";
-import { info, verbose, warn, error } from "./debug_config.js";
+import { super_verbose, info, verbose, warn, error } from "./debug_config.js";
 import { set_fps } from "./dom_update.js";
+
+var global_resources;
+var engine;
 
 // Register a mousemove listener and send data to WebAssembly
 document.addEventListener("mousemove", (event) => {
@@ -197,8 +200,21 @@ async function fetch_texture(texture) {
 }
 
 function init(resources) {
-    wasm.initialize_web_gl(resources);
+	global_resources = resources;
+    engine = wasm.initialize_web_gl(resources);
+}
+
+function change_model(new_model) {
+	info("Updating model...");
+	verbose("Updating resources map...");
+	global_resources.set("cube", new_model);
+	verbose("...resources map updated.");
+
+	verbose("Sending request for wasm to update scene on GPU...");
+	wasm.update_scene(engine, global_resources);
+	verbose("...scene updated.");
+	info("...model updated");
 }
 
 //export public facing functions
-export { get_shader_names, fetch_vert_shader, fetch_frag_shader, fetch_model, fetch_texture, init, update_rotate_x, update_rotate_y, update_rotate_z }
+export { get_shader_names, fetch_vert_shader, fetch_frag_shader, fetch_model, fetch_texture, init, change_model, update_rotate_x, update_rotate_y, update_rotate_z }
