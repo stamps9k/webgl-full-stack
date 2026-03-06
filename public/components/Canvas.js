@@ -4,7 +4,24 @@ import * as webgl from "../libs/webgl.js";
 
 const Canvas = () => {
     useEffect(() => {
-        webgl.fetch_vert_shader();
+        const initGl = async () => { 
+            const url_params = new URLSearchParams(window.location.search);
+            var shaders = await webgl.get_shader_names();
+            var resources = new Map();
+            resources.set("vert_shader", await webgl.fetch_vert_shader(shaders.get("vert_shader")));
+            resources.set("frag_shader", await webgl.fetch_frag_shader(shaders.get("frag_shader")));
+            if(url_params.get("model") == undefined) {
+                resources.set("cube", await webgl.fetch_model("cube.obj"));
+            } else {
+                resources.set("cube", await webgl.fetch_model(url_params.get("model")));
+            }
+            if(url_params.get("texture") != undefined) {
+                resources.set("texture", await webgl.fetch_texture(url_params.get("texture")));
+            } 
+            webgl.init(resources);
+        }
+        
+        initGl()
     }, []);
 
     return (
