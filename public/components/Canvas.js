@@ -24,11 +24,11 @@ const Canvas = () => {
         initGl()
     }, []);
 
-    const [fps, setFPS] = useState('asd');
+    const [fps, setFPS] = useState('FPS - #N/A');
 
     function set_fps(fps)
     {
-        setFPS(fps.toFixed(0));
+        setFPS("FPS - " + fps.toFixed(0));
     }
     // Expose the function globally (for global access from rust)
     globalThis.set_fps = (fps) => set_fps(fps);
@@ -39,7 +39,7 @@ const Canvas = () => {
             <ModelForm />
             <canvas id="glCanvas" className="border" width="736" height="480"></canvas>
             <div className="row">
-                <div id="fps" className="w-25">
+                <div id="fps" className="w-25 text-start">
                     { fps }
                 </div>
                 <div className="w-75">
