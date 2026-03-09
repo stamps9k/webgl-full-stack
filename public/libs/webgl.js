@@ -1,6 +1,5 @@
 import * as wasm from "wasm-model-viewer-core-bin";
 import { super_verbose, info, verbose, warn, error } from "./debug_config.js";
-import { set_fps } from "./dom_update.js";
 
 var global_resources;
 var engine;
