@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ModelForm from "./ModelForm.js";
 import * as webgl from "../libs/webgl.js";
 
@@ -24,6 +24,15 @@ const Canvas = () => {
         initGl()
     }, []);
 
+    const [fps, setFPS] = useState('asd');
+
+    function set_fps(fps)
+    {
+        setFPS(fps.toFixed(0));
+    }
+    // Expose the function globally (for global access from rust)
+    globalThis.set_fps = (fps) => set_fps(fps);
+
     return (
         <div>
             <h1>Web Assembly Model Viewer</h1>
@@ -31,7 +40,7 @@ const Canvas = () => {
             <canvas id="glCanvas" className="border" width="736" height="480"></canvas>
             <div className="row">
                 <div id="fps" className="w-25">
-                    FPS - #N/A
+                    { fps }
                 </div>
                 <div className="w-75">
                     <label htmlFor="rotation_x"> Rotate X:</label>
