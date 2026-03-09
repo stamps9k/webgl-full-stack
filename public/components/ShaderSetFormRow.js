@@ -50,7 +50,7 @@ const ShaderSetFormRow = () => {
                             (shader_set) => 
                             (
                                 <option key={shader_set.shader_set_id} value={shader_set.shader_set_name}>
-                                    {shader_set.shader_set_name}
+                                    {shader_set.shader_set_display_name}
                                 </option>
                             )
                         )
