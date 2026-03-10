@@ -206,7 +206,17 @@ function init(resources) {
 function change_model(new_model) {
 	info("Updating model...");
 	verbose("Updating resources map...");
+	
+	//Update the model
+	super_verbose("Updating model...");
 	global_resources.set("cube", new_model);
+	super_verbose("...model updated.");
+
+	//TODO handle textured object uploads. For now remove texture
+	super_verbose("Updating textures...");
+	global_resources.set("texure", null);
+	super_verbose("...textures updated.");	
+
 	verbose("...resources map updated.");
 
 	verbose("Sending request for wasm to update scene on GPU...");
