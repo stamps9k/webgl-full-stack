@@ -17,7 +17,9 @@ const Canvas = () => {
             }
             if(url_params.get("texture") != undefined) {
                 resources.set("texture", await webgl.fetch_texture(url_params.get("texture")));
-            } 
+            } else {
+                resources.set("texture", null);
+            }
             webgl.init(resources);
         }
         
