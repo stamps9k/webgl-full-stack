@@ -41,6 +41,26 @@ function update_rotate_z(event) {
 }
 window.update_rotate_z = update_rotate_z;
 
+function update_zoom_in(event) {
+	if (event.target.checked) 
+	{
+		wasm.enable_zoom_in();
+	} else {
+		wasm.disable_zoom_in();
+	}
+}
+window.update_zoom_in = update_zoom_in;
+
+function update_zoom_out(event) {
+	if (event.target.checked) 
+	{
+		wasm.enable_zoom_out();
+	} else {
+		wasm.disable_zoom_out();
+	}
+}
+window.update_zoom_out = update_zoom_out;
+
 async function get_shader_names()
 {
 	return new Promise
@@ -226,4 +246,4 @@ function change_model(new_model) {
 }
 
 //export public facing functions
-export { get_shader_names, fetch_vert_shader, fetch_frag_shader, fetch_model, fetch_texture, init, change_model, update_rotate_x, update_rotate_y, update_rotate_z }
+export { get_shader_names, fetch_vert_shader, fetch_frag_shader, fetch_model, fetch_texture, init, change_model, update_zoom_in, update_zoom_out, update_rotate_x, update_rotate_y, update_rotate_z }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 import ModelForm from "./ModelForm.js";
 import * as webgl from "../libs/webgl.js";
 
@@ -45,6 +46,10 @@ const Canvas = () => {
                     { fps }
                 </div>
                 <div className="w-75">
+                    <label htmlFor="zoom_in"> Zoom In:</label>
+                    <input type="checkbox" id="zoom_in" name="zoom_in" value="zoom_in" onChange={webgl.update_zoom_in} />
+                    <label htmlFor="zoom_out"> Zoom Out:</label>
+                    <input type="checkbox" id="zoom_out" name="zoom_out" value="zoom_out" onChange={webgl.update_zoom_out} />
                     <label htmlFor="rotation_x"> Rotate X:</label>
                     <input type="checkbox" id="rotation_x" name="rotation_x" value="rotation_x" onChange={webgl.update_rotate_x} />
                     <label htmlFor="rotation_y"> Rotate Y:</label>
