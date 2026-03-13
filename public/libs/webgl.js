@@ -187,8 +187,8 @@ async function fetch_model(model) {
 				.then(response => response.text())
 				.then(text => {
 					info("... model loaded");
-					verbose("Model text is:");
-					verbose(text);
+					super_verbose("Model text is:");
+					super_verbose(text);
 					resolve(text);
 				})
 				.catch(error => console.error("Error fetching data:", error));
