@@ -6,7 +6,9 @@ import { change_model } from "./webgl.js";
  * Checks extension, reads text, looks for OBJ keywords and Blender comment.
  * Returns a Promise resolving to { valid: boolean, error?: string }
  */
-async function validate_file(file) {
+async function validate_obj(file) {
+    //TMP debug. Allow large files
+    //if (file.size > 1000485760) {
     // Reject any files that are too big. 1048576 is 10MB in Bytes.
     if (file.size > 10485760) {
         error("Validation failed file is too large. Size is " + file.size)
@@ -52,35 +54,5 @@ async function validate_file(file) {
     return { valid: true };
 }
 
-async function save_file(file) {
-    const opfsRoot = await navigator.storage.getDirectory(); // OPFS root
-
-    try {
-        // Create a new file in OPFS with the same name
-        const opfsHandle = await opfsRoot.getFileHandle(file.name, { create: true });
-        const writable = await opfsHandle.createWritable();
-
-        // Copy contents from uploaded file to OPFS
-        await writable.write(await file.arrayBuffer());
-        await writable.close();
-    } catch (e) {
-        error(e);
-        return { valid: false, error: e };
-    }
-
-    info(`Saved ${file.name} to OPFS!`);
-    return { valid: true };
-}
-
-async function process_file(file) {
-    let text = await file.text();
-
-    // Update the model
-    change_model(text);
-
-    //Clean up
-    warn("TODO add file cleanup here.");
-}
-
 //export public facing functions
-export { validate_file, save_file ,process_file }
+export { validate_obj }

@@ -1,15 +1,28 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 
 import { ModelFormContext } from '../contexts/ModelFormContext.js';
 
-import * as fp from "../libs/file_picker.js";
+import * as fp_obj from "../libs/file_picker_obj.js";
+import * as fp_opfs from "../libs/file_picker_opfs.js";
 
 const ModelFormRow = () => {
     const { model_name, update_model_name } = useContext(ModelFormContext);
 
     //Form Items
     const [models, set_models] = useState([{model_id: 1, name: "cube.obj", display_name: "Cube"}]);
+    const inputRef = useRef(null);
+
+    useEffect(
+        () => 
+        {
+            if (inputRef.current) 
+            {
+                inputRef.current.setAttribute("webkitdirectory", "");
+            }
+        }, 
+        []
+    );
 
     const handle_file_picked = (async (e) => {
         var input = e.target
@@ -18,9 +31,16 @@ const ModelFormRow = () => {
             return;
         }
 
-        const file = input.files[0]; // The File object
-        
-        var validation_result = await fp.validate_file(file);
+        for (const file of input.files)
+        {
+            var validation_result = { valid: true, error: '' };
+            if (file.name.includes('obj'))
+            {
+                var validation_result = await fp_obj.validate_obj(file);
+            }
+        }
+
+        // Return any validation errors to the user
         if (validation_result.valid === false) {
             toast.error
             (
@@ -32,16 +52,16 @@ const ModelFormRow = () => {
             );
             return;
         }
-        await fp.save_file(file)
-
-        //Read full file into memory and change the live model
-        await fp.process_file(file);
+        
+        //Read full files into memory and change the live model
+        await fp_opfs.save_file(input.files)
+        await fp_opfs.process_file(input.files);
     });
 
     return (
         <div id="fileRow" className="ms-auto text-start row-fluid px-2 py-1">
             <label htmlFor="formFile" className="form-label">Default file input example</label>
-            <input className="form-control" type="file" id="formFile" onChange={handle_file_picked} />
+            <input type="file" id="folder-input" className="form-control" ref={inputRef} multiple onChange={handle_file_picked} />
             <ToastContainer />
         </div>
     )    
