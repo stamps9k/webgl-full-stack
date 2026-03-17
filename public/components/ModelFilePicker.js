@@ -5,6 +5,8 @@ import { ModelFormContext } from '../contexts/ModelFormContext.js';
 
 import * as fp_obj from "../libs/file_picker_obj.js";
 import * as fp_opfs from "../libs/file_picker_opfs.js";
+import * as fp_mat from "../libs/file_picker_mtl.js";
+import * as fp_tex from "../libs/file_picker_tex.js";
 
 const ModelFormRow = () => {
     const { model_name, update_model_name } = useContext(ModelFormContext);
@@ -36,7 +38,20 @@ const ModelFormRow = () => {
             var validation_result = { valid: true, error: '' };
             if (file.name.includes('obj'))
             {
-                var validation_result = await fp_obj.validate_obj(file);
+                validation_result = await fp_obj.validate_obj(file);
+            } 
+            else if (file.name.includes(',tex'))
+            {
+                validation_result = await fp_tex.validate_tex(file);
+            } 
+            else if (file.name.includes('mtl')) 
+            {
+                validation_result = await fp_mat.validate_mtl(file);
+            }
+            else
+            {
+                validation_result = { valid: false, error: 'Unknown file type .' + file.name.split('.').pop() }
+                break;
             }
         }
 
