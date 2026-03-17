@@ -66,6 +66,31 @@ var model_textures_query_string = (
     "WHERE models.name = ?;"
 );
 
+var model_materials_query_string = (
+    "SELECT models.model_id, " + 
+    "models.name AS model_name, " + 
+    "materials.material_id, " +
+    "materials.name AS material_name, " +
+    "materials.description AS material_description, " +
+    "materials.display_name AS material_display_name " +
+    "FROM models " +
+    "INNER JOIN materials ON models.model_id = materials.model_id " +
+    "WHERE models.name = ?;"
+)
+
+var material_textures_query_string = (
+    "SELECT materials.material_id, " + 
+    "materials.name AS material_name, " + 
+    "textures.texture_id, " +
+    "textures.name AS texture_name, " +
+    "textures.description AS texture_description, " +
+    "textures.display_name AS texture_display_name " +
+    "FROM materials " +
+    "INNER JOIN materials_textures ON materials.material_id = materials_textures.material_id " +
+    "INNER JOIN textures ON materials_textures.texture_id = textures.texture_id " +
+    "WHERE materials.name = ?;"
+);
+
 const model_shader_sets_query_promise = (model_name) => {
     return new Promise
     (
@@ -126,6 +151,31 @@ const model_textures_query_promise = (model_name) => {
     )
 }
 
+const model_materials_query_promise = (model_name) => {
+    return new Promise
+    (
+        (resolve, reject) => {
+            super_verbose("Running query " + model_materials_query_string + "...");
+            const results = db.prepare(model_materials_query_string).all(model_name);
+            super_verbose("... query completed.");
+            resolve(results);
+        }
+    )
+}
+
+const material_textures_query_promise = (model_name) => {
+    return new Promise
+    (
+        (resolve, reject) => {
+            super_verbose("Running query " + material_textures_query_string + "...");
+            const results = db.prepare(material_textures_query_string).all(model_name);
+            super_verbose("... query completed.");
+            resolve(results);
+        }
+    )
+}
+
+// API Route to get all 
 models_routes.get('/api/model/models', async (req, res) => {
     info("Processing request: " + req.url);
     try
@@ -205,6 +255,54 @@ models_routes.get('/api/model/model_textures', async (req, res) => {
     {
         verbose("Querying database...");
         var message = await model_textures_query_promise(model_name);
+        verbose("...database query complete.");
+        super_super_verbose("Returning " + JSON.stringify(message));
+        res.json({ success: true, message });
+    } 
+    catch (err)
+    {
+        error("Error processing query: " + err); 
+        res.status(500).json({ success: false, error: err.message });  
+    }
+});
+
+// API Route to get all materials for a given model
+models_routes.get('/api/model/model_materials', async (req, res) => {
+    info("Processing request: " + req.url);
+    if (req.query.model_name == null || req.query.model_name == undefined)
+    {
+        var model_name = "cube.obj";
+    } else {
+        var model_name = req.query.model_name;
+    }
+    try
+    {
+        verbose("Querying database...");
+        var message = await model_materials_query_promise(model_name);
+        verbose("...database query complete.");
+        super_super_verbose("Returning " + JSON.stringify(message));
+        res.json({ success: true, message });
+    } 
+    catch (err)
+    {
+        error("Error processing query: " + err); 
+        res.status(500).json({ success: false, error: err.message });  
+    }
+});
+
+// API Route to get all materials for a given model
+models_routes.get('/api/model/material_textures', async (req, res) => {
+    info("Processing request: " + req.url);
+    if (req.query.material_name == null || req.query.material_name == undefined)
+    {
+        var material_name = "cube.obj";
+    } else {
+        var material_name = req.query.material_name;
+    }
+    try
+    {
+        verbose("Querying database...");
+        var message = await material_textures_query_promise(material_name);
         verbose("...database query complete.");
         super_super_verbose("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
