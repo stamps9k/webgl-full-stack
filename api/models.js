@@ -290,8 +290,8 @@ models_routes.get('/api/model/model_materials', async (req, res) => {
     }
 });
 
-// API Route to get all materials for a given model
-models_routes.get('/api/model/material_textures', async (req, res) => {
+// API Route to get all textures for a given material
+models_routes.get('/api/material/material_textures', async (req, res) => {
     info("Processing request: " + req.url);
     if (req.query.material_name == null || req.query.material_name == undefined)
     {

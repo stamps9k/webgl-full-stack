@@ -2,26 +2,40 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import ModelForm from "./ModelForm.js";
 import * as webgl from "../libs/webgl.js";
+import { super_verbose, info, verbose, warn, error } from "../libs/debug_config.js";
 
 const Canvas = () => {
     useEffect(() => {
         const initGl = async () => { 
             const url_params = new URLSearchParams(window.location.search);
-            var shaders = await webgl.get_shader_names();
-            var resources = new Map();
-            resources.set("vert_shader", await webgl.fetch_vert_shader(shaders.get("vert_shader")));
-            resources.set("frag_shader", await webgl.fetch_frag_shader(shaders.get("frag_shader")));
-            if(url_params.get("model") == undefined) {
-                resources.set("cube", await webgl.fetch_model("cube.obj"));
-            } else {
-                resources.set("cube", await webgl.fetch_model(url_params.get("model")));
+            try {
+                var shaders = await webgl.get_shader_names();
+                var materials = await webgl.get_material_names();
+                var textures = await webgl.get_texture_names(materials);
+                var resources = new Map();
+                resources.set("vert_shader", await webgl.fetch_vert_shader(shaders.get("vert_shader")));
+                resources.set("frag_shader", await webgl.fetch_frag_shader(shaders.get("frag_shader")));
+                if(url_params.get("model") == undefined) {
+                    resources.set("cube", await webgl.fetch_model("cube.obj"));
+                } else {
+                    resources.set("cube", await webgl.fetch_model(url_params.get("model")));
+                }
+                resources.set("materials", await webgl.fetch_materials(materials));
+                resources.set("textures", await webgl.fetch_textures(textures))
+                webgl.init(resources);
+            } catch (e)
+            {
+                warn(e.message);
+                toast.error
+                (
+                    <span>
+                        Error on start:
+                        <br /> 
+                        {e.message}
+                    </span>
+                );
+                return;
             }
-            if(url_params.get("texture") != undefined) {
-                resources.set("texture", await webgl.fetch_texture(url_params.get("texture")));
-            } else {
-                resources.set("texture", null);
-            }
-            webgl.init(resources);
         }
         
         initGl()

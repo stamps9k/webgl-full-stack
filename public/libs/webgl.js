@@ -145,6 +145,148 @@ async function get_shader_names()
 	);
 }
 
+async function get_material_names() {
+	return new Promise
+	(
+		(resolve) => {
+			const url_params = new URLSearchParams(window.location.search);
+			if (url_params.get('model') == null) 
+			{
+				var model_name = "cube.obj";
+			} else {
+				var model_name = url_params.get('model');
+			}
+
+			info("Fetching material names for model " + model_name);
+			fetch
+			(
+				'/api/model/model_materials?model_name=' + model_name
+			)
+			.then
+			(
+				async function(response) 
+				{
+					//Check if the response is ok, if not throw an error
+					if (!response.ok) 
+					{
+						throw new Error("Network response was not ok: " + response.statusText);
+					} 
+					//Check if the response is empty, if so log and throw an error
+					else 
+					{
+						//Clone the response as the original response was already consumed
+						let clone = response.clone();
+						var response_json = await clone.json();
+						return response.json();
+					}
+				},
+				function() {
+					//Throw an error if the fetch fails
+					throw new Error("Failed to fetch materials for model " + model_name);
+				}
+			)
+			.then
+			(
+				text => {
+					info("...API responded.");
+					verbose("Full API response is:");
+					verbose(text);
+					var materials = [];
+					text.message.forEach
+					(
+						(material_info) => 
+						{
+							materials.push(material_info.material_name);
+						}
+					);
+					console.log("materials:", materials);
+					resolve(materials);
+				}
+			)
+			.catch
+			(
+				function(error_response)
+				{
+					error(error_response.message);
+					throw new Error(error_response.message)
+				} 
+			)
+		}
+	);
+}
+
+async function get_texture_names(materials) {
+	return new Promise
+	(
+		(resolve) => {
+			const url_params = new URLSearchParams(window.location.search);
+			var textures_return = [];
+			for (const material of materials)
+			{
+				info("Fetching texture names for material " + material);
+				fetch
+				(
+					'/api/material/material_textures?material_name=' + material
+				)
+				.then
+				(
+					async function(response) 
+					{
+						//Check if the response is ok, if not throw an error
+						if (!response.ok) 
+						{
+							throw new Error("Network response was not ok: " + response.statusText);
+						} 
+						//Check if the response is empty, if so log and throw an error
+						else 
+						{
+							//Clone the response as the original response was already consumed
+							let clone = response.clone();
+							var response_json = await clone.json();
+							if(response_json.message.length == 0) 
+							{
+								return response.json();
+							} 
+							else
+							{
+								return response.json();	
+							}
+						}
+					},
+					function() {
+						//Throw an error if the fetch fails
+						throw new Error("Failed to fetch textures for material " + material);
+					}
+				)
+				.then
+				(
+					text => {
+						info("...API responded.");
+						verbose("Full API response is:");
+						verbose(text);
+						for (const texture_info of text.message)
+						{
+							textures_return.push(texture_info.texture_name)
+						}
+						resolve(textures_return);
+					}
+				)
+				.catch
+				(
+					function(error_response)
+					{
+						error(error_response.message);
+						throw new Error(error_response);
+					} 
+				)
+			}
+			// Empty array returned if there was not material in the first place.
+			info("No materials so no textures fetched.")
+			resolve([]);
+		}
+	);
+}
+
 async function fetch_vert_shader(vert_shader) {
 	return new Promise (
 		(resolve) => {
@@ -196,31 +338,67 @@ async function fetch_model(model) {
 	);
 }
 
-async function fetch_texture(texture) {
+async function fetch_materials(materials) {
 	return new Promise (
 		(resolve) => {
-			info("Loading texture " + texture + "...");
-			fetch('assets/' + texture)
-			.then(response => response.arrayBuffer())
-			.then(arrayBuffer => {
-				var result_b = new Uint8Array(arrayBuffer);
-				const binString = Array.from(result_b, (byte) =>
-					String.fromCodePoint(byte),
-				).join("");
-				var result_b64 = btoa(binString);
-				info("... texture loaded");
-				verbose("B64 Encoded  texture is:");
-				verbose(result_b64);
-				resolve(result_b64);
-			})
-			.catch(error => console.error("Error fetching data:", error));
+			var return_materials = new Map();
+			for (const material of materials){
+				info("Loading material " + material + "...");
+				fetch('assets/' + material)
+					.then(response => response.text())
+					.then(text => {
+						info("... material loaded");
+						super_verbose("Material text is:");
+						super_verbose(text);
+						return_materials.set(material, text)
+						resolve(return_materials);
+					})
+					.catch(error => console.error("Error fetching data:", error));
+			}
+			// No materials so nothing to check.
+			resolve(return_materials);
+		}
+	);
+}
+
+async function fetch_textures(textures) {
+	return new Promise (
+		(resolve) => {
+			var return_textures = new Map();
+			for (const texture of textures) {
+				info("Loading texture " + textures[0] + "...");
+				fetch('assets/' + textures[0])
+				.then(response => response.arrayBuffer())
+				.then(arrayBuffer => {
+					var result_b = new Uint8Array(arrayBuffer);
+					const binString = Array.from(result_b, (byte) =>
+						String.fromCodePoint(byte),
+					).join("");
+					var result_b64 = btoa(binString);
+					info("... texture loaded");
+					verbose("B64 Encoded  texture is:");
+					verbose(result_b64);
+					return_textures.set(texture, result_b64);
+					resolve(return_textures);
+				})
+				.catch(error => console.error("Error fetching data:", error));
+			}
+			// No textures so nothing to check.
+			resolve(return_textures);
 		}
 	);
 }
 
 function init(resources) {
+	var stringified_resources = JSON.stringify(resources, (key, value) => {
+			if (value instanceof Map) return Object.fromEntries(value);
+			if (key !== '' && !(value instanceof Object)) return String(value).slice(0, 10) + '...';
+			return value;
+		}, 2)
+	verbose("Telling wasm to start WebGl with the following" + stringified_resources + "...");
 	global_resources = resources;
     engine = wasm.initialize_web_gl(resources);
+	verbose("...wasm returned.")
 }
 
 function change_model(new_model) {
@@ -246,4 +424,4 @@ function change_model(new_model) {
 }
 
 //export public facing functions
-export { get_shader_names, fetch_vert_shader, fetch_frag_shader, fetch_model, fetch_texture, init, change_model, update_zoom_in, update_zoom_out, update_rotate_x, update_rotate_y, update_rotate_z }
+export { get_shader_names, get_material_names, get_texture_names, fetch_vert_shader, fetch_frag_shader, fetch_model, fetch_materials, fetch_textures, init, change_model, update_zoom_in, update_zoom_out, update_rotate_x, update_rotate_y, update_rotate_z }

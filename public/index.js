@@ -6,6 +6,7 @@ import App from "./components/App.js";
 import '../assets/models/cube.obj';
 import '../assets/models/cube-tex.obj';
 import '../assets/models/teapot.obj';
+import '../assets/models/chaynik.obj';
 import '../assets/img/icon.jpg';
 import '../assets/img/favicons/favicon.ico';
 import '../assets/shaders/vert-color.vert';
@@ -16,6 +17,7 @@ import '../assets/shaders/vert-color-time.vert';
 import '../assets/shaders/vert-color-time.frag';
 import '../assets/shaders/cube-tex.vert';
 import '../assets/shaders/cube-tex.frag';
+import '../assets/materials/chaynik.mtl';
 import '../assets/textures/cube-tex.tex';
 import "./css/cover.css";
 

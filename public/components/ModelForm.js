@@ -60,7 +60,6 @@ const ModelForm = () => {
                         </div>
                         <ModelFormRow />
                         <ShaderSetFormRow />
-                        <TextureFormRow />
                         <div id="submitRow" className="ms-auto py-1 row">
                         <div className="col-1 mx-1">
                         <button className="btn btn-success">Submit</button>
