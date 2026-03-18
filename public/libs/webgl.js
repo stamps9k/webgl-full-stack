@@ -199,7 +199,6 @@ async function get_material_names() {
 							materials.push(material_info.material_name);
 						}
 					);
-					console.log("materials:", materials);
 					resolve(materials);
 				}
 			)
@@ -221,68 +220,73 @@ async function get_texture_names(materials) {
 		(resolve) => {
 			const url_params = new URLSearchParams(window.location.search);
 			var textures_return = [];
-			for (const material of materials)
+			if (materials.length == 0)
 			{
-				info("Fetching texture names for material " + material);
-				fetch
-				(
-					'/api/material/material_textures?material_name=' + material
-				)
-				.then
-				(
-					async function(response) 
-					{
-						//Check if the response is ok, if not throw an error
-						if (!response.ok) 
+				// Empty array returned if there was not material in the first place.
+				info("No materials so no textures fetched.")
+				resolve(textures_return);
+			} else {
+				for (const material of materials)
+				{
+					info("Fetching texture names for material " + material);
+					fetch
+					(
+						'/api/material/material_textures?material_name=' + material
+					)
+					.then
+					(
+						async function(response) 
 						{
-							throw new Error("Network response was not ok: " + response.statusText);
-						} 
-						//Check if the response is empty, if so log and throw an error
-						else 
-						{
-							//Clone the response as the original response was already consumed
-							let clone = response.clone();
-							var response_json = await clone.json();
-							if(response_json.message.length == 0) 
+							//Check if the response is ok, if not throw an error
+							if (!response.ok) 
 							{
-								return response.json();
+								throw new Error("Network response was not ok: " + response.statusText);
 							} 
-							else
+							//Check if the response is empty, if so log and throw an error
+							else 
 							{
-								return response.json();	
+								//Clone the response as the original response was already consumed
+								let clone = response.clone();
+								var response_json = await clone.json();
+								if(response_json.message.length == 0) 
+								{
+									return response.json();
+								} 
+								else
+								{
+									return response.json();	
+								}
 							}
+						},
+						function() {
+							//Throw an error if the fetch fails
+							throw new Error("Failed to fetch textures for material " + material);
 						}
-					},
-					function() {
-						//Throw an error if the fetch fails
-						throw new Error("Failed to fetch textures for material " + material);
-					}
-				)
-				.then
-				(
-					text => {
-						info("...API responded.");
-						verbose("Full API response is:");
-						verbose(text);
-						for (const texture_info of text.message)
+					)
+					.then
+					(
+						text => {
+							info("...API responded.");
+							verbose("Full API response is:");
+							verbose(text);
+							for (const texture_info of text.message)
+							{
+								textures_return.push(texture_info.texture_name)
+							}
+							resolve(textures_return);
+						}
+					)
+					.catch
+					(
+						function(error_response)
 						{
-							textures_return.push(texture_info.texture_name)
-						}
-						resolve(textures_return);
-					}
-				)
-				.catch
-				(
-					function(error_response)
-					{
-						error(error_response.message);
-						throw new Error(error_response);
-					} 
-				)
+							error(error_response.message);
+							throw new Error(error_response);
+						} 
+					)
+				}
 			}
-			// Empty array returned if there was not material in the first place.
-			info("No materials so no textures fetched.")
-			resolve([]);
+			
 		}
 	);
 }
@@ -342,21 +346,25 @@ async function fetch_materials(materials) {
 	return new Promise (
 		(resolve) => {
 			var return_materials = new Map();
-			for (const material of materials){
-				info("Loading material " + material + "...");
-				fetch('assets/' + material)
-					.then(response => response.text())
-					.then(text => {
-						info("... material loaded");
-						super_verbose("Material text is:");
-						super_verbose(text);
-						return_materials.set(material, text)
-						resolve(return_materials);
-					})
-					.catch(error => console.error("Error fetching data:", error));
+			if (materials.length == 0)
+			{
+				// No materials so nothing to check.
+				resolve(return_materials);
+			} else {
+				for (const material of materials){
+					info("Loading material " + material + "...");
+					fetch('assets/' + material)
+						.then(response => response.text())
+						.then(text => {
+							info("... material loaded");
+							super_verbose("Material text is:");
+							super_verbose(text);
+							return_materials.set(material, text)
+							resolve(return_materials);
+						})
+						.catch(error => console.error("Error fetching data:", error));
+				}
 			}
-			// No materials so nothing to check.
-			resolve(return_materials);
 		}
 	);
 }
@@ -365,26 +373,30 @@ async function fetch_textures(textures) {
 	return new Promise (
 		(resolve) => {
 			var return_textures = new Map();
-			for (const texture of textures) {
-				info("Loading texture " + textures[0] + "...");
-				fetch('assets/' + textures[0])
-				.then(response => response.arrayBuffer())
-				.then(arrayBuffer => {
-					var result_b = new Uint8Array(arrayBuffer);
-					const binString = Array.from(result_b, (byte) =>
-						String.fromCodePoint(byte),
-					).join("");
-					var result_b64 = btoa(binString);
-					info("... texture loaded");
-					verbose("B64 Encoded  texture is:");
-					verbose(result_b64);
-					return_textures.set(texture, result_b64);
-					resolve(return_textures);
-				})
-				.catch(error => console.error("Error fetching data:", error));
+			if (textures.length == 0)
+			{
+				// No textures so nothing to check.
+				resolve(return_textures);
+			} else {
+				for (const texture of textures) {
+					info("Loading texture " + textures[0] + "...");
+					fetch('assets/' + textures[0])
+					.then(response => response.arrayBuffer())
+					.then(arrayBuffer => {
+						var result_b = new Uint8Array(arrayBuffer);
+						const binString = Array.from(result_b, (byte) =>
+							String.fromCodePoint(byte),
+						).join("");
+						var result_b64 = btoa(binString);
+						info("... texture loaded");
+						verbose("B64 Encoded  texture is:");
+						verbose(result_b64);
+						return_textures.set(texture, result_b64);
+						resolve(return_textures);
+					})
+					.catch(error => console.error("Error fetching data:", error));
+				}
 			}
-			// No textures so nothing to check.
-			resolve(return_textures);
 		}
 	);
 }
