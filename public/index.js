@@ -17,8 +17,10 @@ import '../assets/shaders/vert-color-time.vert';
 import '../assets/shaders/vert-color-time.frag';
 import '../assets/shaders/cube-tex.vert';
 import '../assets/shaders/cube-tex.frag';
+import '../assets/materials/cube.mtl';
 import '../assets/materials/chaynik.mtl';
 import '../assets/textures/cube-tex.tex';
+import '../assets/textures/chaynik.tex';
 import "./css/cover.css";
 
 //React initialization
