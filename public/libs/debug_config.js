@@ -14,9 +14,30 @@ info("Info debugging enabled.");
 warn("Warn debugging enable");
 error("Error debugging enabled.");
 
+
+// Define a limit on detailed logging to ensure that browser is not sent too much information too quickly 
+globalThis.DETAILED_LOG_LIMIT = 5000000;
+globalThis.current_detailed_count = 0;
+
 // Expose the function globally (for global access from rust)
-globalThis.super_super_verbose_api = (message) => super_super_verbose(message);
-globalThis.super_verbose_api = (message) => super_verbose(message);
+globalThis.super_super_verbose_api = (message) => 
+    {
+        if (current_detailed_count < DETAILED_LOG_LIMIT)
+        {
+            current_detailed_count++;
+            super_super_verbose(message);
+
+        } 
+    };
+globalThis.super_verbose_api = (message) => 
+    {  
+        if (current_detailed_count < DETAILED_LOG_LIMIT)
+        {
+            current_detailed_count++;
+            super_verbose(message);
+
+        }
+    };
 globalThis.verbose_api = (message) => verbose(message);
 globalThis.info_api = (message) => info(message);
 globalThis.warn_api = (message) => warn(message);
