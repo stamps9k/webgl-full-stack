@@ -402,19 +402,14 @@ async function fetch_textures(textures) {
 }
 
 function init(resources) {
-	var stringified_resources = JSON.stringify(resources, (key, value) => {
-			if (value instanceof Map) return Object.fromEntries(value);
-			if (key !== '' && !(value instanceof Object)) return String(value).slice(0, 10) + '...';
-			return value;
-		}, 2)
-	verbose("Telling wasm to start WebGl with the following" + stringified_resources + "...");
+	verbose("Telling wasm to start WebGl with the following" + stringify_map(resources) + "...");
 	global_resources = resources;
     engine = wasm.initialize_web_gl(resources);
 	verbose("...wasm returned.")
 }
 
 function change_model(new_model) {
-	info("Updating model...");
+	info("Updating resources...");
 	verbose("Updating resources map...");
 	
 	//Update the model
@@ -424,15 +419,25 @@ function change_model(new_model) {
 
 	//TODO handle textured object uploads. For now remove texture
 	super_verbose("Updating textures...");
-	global_resources.set("texure", null);
+	global_resources.set("textures", {});
 	super_verbose("...textures updated.");	
-
 	verbose("...resources map updated.");
 
 	verbose("Sending request for wasm to update scene on GPU...");
+	verbose("Telling wasm to update WebGl with the following" + stringify_map(global_resources) + "...");
 	engine = wasm.update_scene(engine, global_resources);
 	verbose("...scene updated.");
 	info("...model updated");
+}
+
+function stringify_map(resources) {
+	var stringified_resources = JSON.stringify(resources, (key, value) => {
+		if (value instanceof Map) return Object.fromEntries(value);
+		if (key !== '' && !(value instanceof Object)) return String(value).slice(0, 10) + '...';
+		return value;
+	}, 2)
+
+	return stringified_resources;
 }
 
 //export public facing functions
