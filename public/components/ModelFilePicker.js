@@ -28,19 +28,31 @@ const ModelFormRow = () => {
 
     const handle_file_picked = (async (e) => {
         var input = e.target
+
+        //Check that I file was passed.
         if (input.files.length === 0) {
             alert('No file selected');
             return;
         }
 
-        for (const file of input.files)
+        // Filter any hidden .files from processing.
+        const files = Array.from(e.target.files).filter(
+            file => !/(^|\/)\./.test(file.name)
+        );
+
+        // Validate file contents and stop on any remaining unknown file types.
+        for (const file of files)
         {
             var validation_result = { valid: true, error: '' };
             if (file.name.includes('obj'))
             {
                 validation_result = await fp_obj.validate_obj(file);
             } 
-            else if (file.name.includes(',tex'))
+            else if 
+            (
+                file.name.includes('tex') ||
+                file.name.includes('png')
+            )
             {
                 validation_result = await fp_tex.validate_tex(file);
             } 
@@ -69,8 +81,8 @@ const ModelFormRow = () => {
         }
         
         //Read full files into memory and change the live model
-        await fp_opfs.save_file(input.files)
-        await fp_opfs.process_file(input.files);
+        await fp_opfs.save_file(files)
+        await fp_opfs.process_file(files);
     });
 
     return (

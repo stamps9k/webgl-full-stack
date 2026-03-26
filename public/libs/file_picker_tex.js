@@ -15,7 +15,12 @@ async function validate_tex(file) {
     }
 
     // Check extension
-    if (!file.name.toLowerCase().endsWith('.tex')) {
+    if 
+    (
+        !file.name.toLowerCase().endsWith('.tex') &&
+        !file.name.toLowerCase().endsWith('.png')
+    )
+    {
         return { valid: false, error: 'File must have a .tex extension.' };
     }
 
