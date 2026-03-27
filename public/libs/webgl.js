@@ -417,9 +417,9 @@ function change_model(new_model) {
 	global_resources.set("cube", new_model);
 	super_verbose("...model updated.");
 
-	//TODO handle textured object uploads. For now remove texture
+	//TODO handle textured object uploads. For now remove texture and always use vertex color based shader 
 	super_verbose("Updating textures...");
-	global_resources.set("textures", {});
+	global_resources.set("textures", new Map());
 	super_verbose("...textures updated.");	
 	verbose("...resources map updated.");
 
