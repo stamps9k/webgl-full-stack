@@ -181,6 +181,9 @@ logger_wasm["warn_wasm_gpu_mem"]("WebAssembly Warn debugging enable for wasm gpu
 logger_wasm["error_wasm_gpu_mem"]("WebAssembly Error debugging enabled for wasm gpu memory management.");
 /*---------------------------------------------------------------------------*/
 
+console.log("");
+console.log("");
+
 // Define a limit on detailed logging to ensure that browser is not sent too much information too quickly 
 globalThis.DETAILED_LOG_LIMIT = 5000000;
 globalThis.current_detailed_count = 0;
