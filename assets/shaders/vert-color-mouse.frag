@@ -16,7 +16,7 @@ void main() {
 		colour[0] * position_variance, 
 		colour[1] * position_variance, 
 		colour[2] * position_variance, 
-		1.0
+		1.0 * position_variance
 	);
 	frag_colour = new_colour;
 }
