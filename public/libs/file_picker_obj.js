@@ -1,4 +1,4 @@
-import { info, verbose, warn, error } from "./debug_config.js";
+import { logger } from "./debug_config.mjs";
 import { change_model } from "./webgl.js";
 
 /**
@@ -11,7 +11,7 @@ async function validate_obj(file) {
     if (file.size > 1000485760) {
     // Reject any files that are too big. 1048576 is 10MB in Bytes.
     //if (file.size > 10485760) {
-        error("Validation failed file is too large. Size is " + file.size)
+        logger["error_js_opfs"]("Validation failed file is too large. Size is " + file.size)
         return { valid: false, error: 'File is too large. Maximum vald size is 10MB.' };
     }
 
@@ -48,7 +48,7 @@ async function validate_obj(file) {
 
     // Optionally require Blender comment, but allow generic OBJ
     if (!(hasBlender || hasObjHeader)) {
-        warn('OBJ file does not have a Blender or Wavefront header comment.');
+        logger["warn_js_opfs"]('OBJ file does not have a Blender or Wavefront header comment.');
     }
 
     return { valid: true };

@@ -1,5 +1,5 @@
 import * as wasm from "wasm-model-viewer-core-bin";
-import { super_verbose, info, verbose, warn, error } from "./debug_config.js";
+import { logger } from "./debug_config.mjs";
 
 var global_resources;
 var engine;
@@ -74,7 +74,7 @@ async function get_shader_names()
 				var shader_set_name = url_params.get('shader_set');
 			}
 
-			info("Fetching shader names for set " + shader_set_name);
+			logger["info_js_fetch"]("Fetching shader names for set " + shader_set_name);
 			fetch
 			(
 				'api/model/shader_set_shaders?shader_set_name=' + shader_set_name
@@ -112,9 +112,9 @@ async function get_shader_names()
 			.then
 			(
 				text => {
-					info("...API responded.");
-					verbose("Full API response is:");
-					verbose(text);
+					logger["info_js_fetch"]("...API responded.");
+					logger["verbose_js_fetch"]("Full API response is:");
+					logger["verbose_js_fetch"](text);
 					var resources = new Map();
 					text.message.forEach
 					(
@@ -137,7 +137,7 @@ async function get_shader_names()
 			(
 				function(error_response)
 				{
-					error(error_response.message);
+					logger["error_js_fetch"](error_response.message);
 					return null
 				} 
 			)
@@ -157,7 +157,7 @@ async function get_material_names() {
 				var model_name = url_params.get('model');
 			}
 
-			info("Fetching material names for model " + model_name);
+			logger["info_js_fetch"]("Fetching material names for model " + model_name);
 			fetch
 			(
 				'/api/model/model_materials?model_name=' + model_name
@@ -188,9 +188,9 @@ async function get_material_names() {
 			.then
 			(
 				text => {
-					info("...API responded.");
-					verbose("Full API response is:");
-					verbose(text);
+					logger["info_js_fetch"]("...API responded.");
+					logger["verbose_js_fetch"]("Full API response is:");
+					logger["verbose_js_fetch"](text);
 					var materials = [];
 					text.message.forEach
 					(
@@ -206,7 +206,7 @@ async function get_material_names() {
 			(
 				function(error_response)
 				{
-					error(error_response.message);
+					logger["error_js_fetch"](error_response.message);
 					throw new Error(error_response.message)
 				} 
 			)
@@ -223,12 +223,12 @@ async function get_texture_names(materials) {
 			if (materials.length == 0)
 			{
 				// Empty array returned if there was not material in the first place.
-				info("No materials so no textures fetched.")
+				logger["info_js_fetch"]("No materials so no textures fetched.")
 				resolve(textures_return);
 			} else {
 				for (const material of materials)
 				{
-					info("Fetching texture names for material " + material);
+					logger["info_js_fetch"]("Fetching texture names for material " + material);
 					fetch
 					(
 						'/api/material/material_textures?material_name=' + material
@@ -266,9 +266,9 @@ async function get_texture_names(materials) {
 					.then
 					(
 						text => {
-							info("...API responded.");
-							verbose("Full API response is:");
-							verbose(text);
+							logger["info_js_fetch"]("...API responded.");
+							logger["verbose_js_fetch"]("Full API response is:");
+							logger["verbose_js_fetch"](text);
 							for (const texture_info of text.message)
 							{
 								textures_return.push(texture_info.texture_name)
@@ -280,7 +280,7 @@ async function get_texture_names(materials) {
 					(
 						function(error_response)
 						{
-							error(error_response.message);
+							logger["error_js_fetch"](error_response.message);
 							throw new Error(error_response);
 						} 
 					)
@@ -294,13 +294,13 @@ async function get_texture_names(materials) {
 async function fetch_vert_shader(vert_shader) {
 	return new Promise (
 		(resolve) => {
-		info("Loading shader " + vert_shader + "...");
+		logger["info_js_fetch"]("Loading shader " + vert_shader + "...");
 		fetch('assets/' + vert_shader)
 			.then(response => response.text())
 			.then(text => {
-				info("... vert shader loaded");
-				verbose("Shader text is:");
-				verbose(text);
+				logger["info_js_fetch"]("... vert shader loaded");
+				logger["verbose_js_fetch"]("Shader text is:");
+				logger["verbose_js_fetch"](text);
 				resolve(text);
 			})
 			.catch(error => console.error("Error fetching data:", error));
@@ -311,13 +311,13 @@ async function fetch_vert_shader(vert_shader) {
 async function fetch_frag_shader(frag_shader) {
 	return new Promise (
 		(resolve) => {
-			info("Loading shader " + frag_shader + "...");
+			logger["info_js_fetch"]("Loading shader " + frag_shader + "...");
 			fetch('assets/' + frag_shader)
 				.then(response => response.text())
 				.then(text => {
-					info("... frag shader loaded");
-					verbose("Shader text is:");
-					verbose(text);
+					logger["info_js_fetch"]("... frag shader loaded");
+					logger["verbose_js_fetch"]("Shader text is:");
+					logger["verbose_js_fetch"](text);
 					resolve(text);
 				})
 				.catch(error => console.error("Error fetching data:", error));
@@ -328,13 +328,13 @@ async function fetch_frag_shader(frag_shader) {
 async function fetch_model(model) {
 	return new Promise (
 		(resolve) => {
-			info("Loading model " + model + "...");
+			logger["info_js_fetch"]("Loading model " + model + "...");
 			fetch('assets/' + model)
 				.then(response => response.text())
 				.then(text => {
-					info("... model loaded");
-					super_verbose("Model text is:");
-					super_verbose(text);
+					logger["info_js_fetch"]("... model loaded");
+					logger["super_verbose_js_fetch"]("Model text is:");
+					logger["super_verbose_js_fetch"](text);
 					resolve(text);
 				})
 				.catch(error => console.error("Error fetching data:", error));
@@ -352,13 +352,13 @@ async function fetch_materials(materials) {
 				resolve(return_materials);
 			} else {
 				for (const material of materials){
-					info("Loading material " + material + "...");
+					logger["info_js_fetch"]("Loading material " + material + "...");
 					fetch('assets/' + material)
 						.then(response => response.text())
 						.then(text => {
-							info("... material loaded");
-							super_verbose("Material text is:");
-							super_verbose(text);
+							logger["info_js_fetch"]("... material loaded");
+							logger["super_verbose_js_fetch"]("Material text is:");
+							logger["super_verbose_js_fetch"](text);
 							return_materials.set(material, text)
 							resolve(return_materials);
 						})
@@ -379,7 +379,7 @@ async function fetch_textures(textures) {
 				resolve(return_textures);
 			} else {
 				for (const texture of textures) {
-					info("Loading texture " + textures[0] + "...");
+					logger["info_js_fetch"]("Loading texture " + textures[0] + "...");
 					fetch('assets/' + textures[0])
 					.then(response => response.arrayBuffer())
 					.then(arrayBuffer => {
@@ -388,9 +388,9 @@ async function fetch_textures(textures) {
 							String.fromCodePoint(byte),
 						).join("");
 						var result_b64 = btoa(binString);
-						info("... texture loaded");
-						verbose("B64 Encoded  texture is:");
-						verbose(result_b64);
+						logger["info_js_fetch"]("... texture loaded");
+						logger["verbose_js_fetch"]("B64 Encoded  texture is:");
+						logger["verbose_js_fetch"](result_b64);
 						return_textures.set(texture, result_b64);
 						resolve(return_textures);
 					})
@@ -402,32 +402,33 @@ async function fetch_textures(textures) {
 }
 
 function init(resources) {
-	verbose("Telling wasm to start WebGl with the following" + stringify_map(resources) + "...");
+	logger["verbose_js_wasm"]("Telling wasm to start WebGl with the following" + stringify_map(resources) + "...");
 	global_resources = resources;
     engine = wasm.initialize_web_gl(resources);
-	verbose("...wasm returned.")
+	logger["verbose_js_wasm"]("...wasm returned.")
 }
 
 function change_model(new_model) {
-	info("Updating resources...");
-	verbose("Updating resources map...");
+	logger["info_js_fetch"]("Updating resources...");
+	logger["verbose_js_fetch"]("Updating resources map...");
 	
 	//Update the model
-	super_verbose("Updating model...");
+	logger["super_verbose_js_fetch"]("Updating model...");
 	global_resources.set("cube", new_model);
-	super_verbose("...model updated.");
+	logger["super_verbose_js_fetch"]("...model updated.");
 
 	//TODO handle textured object uploads. For now remove texture and always use vertex color based shader 
-	super_verbose("Updating textures...");
+	logger["super_verbose_js_fetch"]("Updating textures...");
 	global_resources.set("textures", new Map());
-	super_verbose("...textures updated.");	
-	verbose("...resources map updated.");
+	logger["super_verbose_js_fetch"]("...textures updated.");	
+	logger["verbose_js_fetch"]("...resources map updated.");
+	logger["info_js_fetch"]("...resources updated.");
 
-	verbose("Sending request for wasm to update scene on GPU...");
-	verbose("Telling wasm to update WebGl with the following" + stringify_map(global_resources) + "...");
+	logger["verbose_js_wasm"]("Sending request for wasm to update scene on GPU...");
+	logger["verbose_js_wasm"]("Telling wasm to update WebGl with the following" + stringify_map(global_resources) + "...");
 	engine = wasm.update_scene(engine, global_resources);
-	verbose("...scene updated.");
-	info("...model updated");
+	logger["verbose_js_wasm"]("...scene updated.");
+	logger["info_js_wasm"]("...model updated");
 }
 
 function stringify_map(resources) {

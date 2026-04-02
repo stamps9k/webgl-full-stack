@@ -1,18 +1,21 @@
-const path = require('path');
-const express = require('express');
-const { register } = require('module');
+//NPM imports
+import path from 'path';
+import { fileURLToPath } from 'url';
+import express from 'express';
+import db_import from 'better-sqlite3';
 
-//Define all posasible logging levels
-const super_super_verbose = require('debug')("app:SUPER_SUPER_VERBOSE");
-const super_verbose = require('debug')("app:SUPER_VERBOSE");
-const verbose = require('debug')("app:VERBOSE");
-const info = require('debug')('app:INFO');
-const warn = require('debug')("app:WARN");
-const error = require('debug')("app:ERROR");
+//My project imports
+import { logger_api } from "../public/libs/debug_config.mjs";
 
+// Variables
+const __filename = fileURLToPath(import.meta.url);
+const dbPath = path.resolve(__filename, "../../databases/app.db");
+logger_api["info_api_db"]("Path to DB defined as " + dbPath);
 
-const dbPath = path.resolve(__dirname, '../databases/app.db');
-const db = require('better-sqlite3')(dbPath, { verbose: console.log });
+logger_api["info_api_db"]("Connecting to DB... " + dbPath);
+const db = db_import(dbPath);
+//const db = db_import(dbPath, { verbose: console.log });
+logger_api["info_api_db"]("...connected to DB successfully." + dbPath);
 
 const models_routes = express.Router();
 
@@ -95,9 +98,9 @@ const model_shader_sets_query_promise = (model_name) => {
     return new Promise
     (
         (resolve, reject) => {
-            super_verbose("Running query " + model_shader_sets_query_string + "...");
+            logger_api["super_verbose_api_model"]("Running query " + model_shader_sets_query_string + "...");
             const results = db.prepare(model_shader_sets_query_string).all(model_name)
-            super_verbose("... query completed.");
+            logger_api["super_verbose_api_model"]("... query completed.");
             resolve(results);
         }
     )
@@ -107,9 +110,9 @@ const model_info_query_promise = (model_id) => {
     return new Promise
     (
         (resolve, reject) => {
-            super_verbose("Running query " + model_shaders_query_string + "...");
+            logger_api["super_verbose_api_model"]("Running query " + model_shaders_query_string + "...");
             const results = db.prepare(model_shader_query_string).all(model_id);
-            super_verbose("... query completed.");
+            logger_api["super_verbose_api_model"]("... query completed.");
             resolve(results);
         }
     )
@@ -119,9 +122,9 @@ const models_query_promise = () => {
     return new Promise
     (
         (resolve, reject) => {
-            super_verbose("Running query " + models_query_string + "...");
+            logger_api["super_verbose_api_model"]("Running query " + models_query_string + "...");
             const results = db.prepare(models_query_string).all();
-            super_verbose("... query completed.");
+            logger_api["super_verbose_api_model"]("... query completed.");
             resolve(results);
         }
     )
@@ -131,9 +134,9 @@ const shader_set_shaders_query_promise = (shader_set_name) => {
     return new Promise
     (
         (resolve, reject) => {
-            super_verbose("Running query " + shader_set_shaders_query_string + "...");
+            logger_api["super_verbose_api_model"]("Running query " + shader_set_shaders_query_string + "...");
             const results = db.prepare(shader_set_shaders_query_string).all(shader_set_name);
-            super_verbose("... query completed.");
+            logger_api["super_verbose_api_model"]("... query completed.");
             resolve(results);
         }
     )
@@ -143,9 +146,9 @@ const model_textures_query_promise = (model_name) => {
     return new Promise
     (
         (resolve, reject) => {
-            super_verbose("Running query " + model_textures_query_string + "...");
+            logger_api["super_verbose_api_model"]("Running query " + model_textures_query_string + "...");
             const results = db.prepare(model_textures_query_string).all(model_name);
-            super_verbose("... query completed.");
+            logger_api["super_verbose_api_model"]("... query completed.");
             resolve(results);
         }
     )
@@ -155,9 +158,9 @@ const model_materials_query_promise = (model_name) => {
     return new Promise
     (
         (resolve, reject) => {
-            super_verbose("Running query " + model_materials_query_string + "...");
+            logger_api["super_verbose_api_model"]("Running query " + model_materials_query_string + "...");
             const results = db.prepare(model_materials_query_string).all(model_name);
-            super_verbose("... query completed.");
+            logger_api["super_verbose_api_model"]("... query completed.");
             resolve(results);
         }
     )
@@ -167,9 +170,9 @@ const material_textures_query_promise = (model_name) => {
     return new Promise
     (
         (resolve, reject) => {
-            super_verbose("Running query " + material_textures_query_string + "...");
+            logger_api["super_verbose_api_model"]("Running query " + model_materials_query_string + "...");
             const results = db.prepare(material_textures_query_string).all(model_name);
-            super_verbose("... query completed.");
+            logger_api["super_verbose_api_model"]("... query completed.");
             resolve(results);
         }
     )
@@ -177,18 +180,18 @@ const material_textures_query_promise = (model_name) => {
 
 // API Route to get all 
 models_routes.get('/api/model/models', async (req, res) => {
-    info("Processing request: " + req.url);
+    logger_api["info_api_model"]("Processing request: " + req.url);
     try
     {
-        verbose("Querying database...");
+        logger_api["info_api_model"]("Querying database...");
         var message = await models_query_promise();
-        verbose("...database query complete.");
-        super_super_verbose("Returning " + JSON.stringify(message));
+        logger_api["info_api_model"]("...database query complete.");
+        logger_api["super_verbose_api_model"]("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
     } 
     catch (err)
     {
-        error("Error processing query: " + err);  
+        logger_api["error_api_model"]("Error processing query: " + err);  
         res.status(500).json({ success: false, error: err.message });  
     }
 
@@ -196,7 +199,7 @@ models_routes.get('/api/model/models', async (req, res) => {
 
 // API Route to get model information
 models_routes.get('/api/model/model_info', async (req, res) => {
-    info("Processing request: " + req.url);
+    logger_api["info_api_model"]("Processing request: " + req.url);
     if (req.query.model_id == null || req.query.model_id == undefined)
     {
         var model_id = "1";
@@ -205,22 +208,22 @@ models_routes.get('/api/model/model_info', async (req, res) => {
     }
     try
     {
-        verbose("Querying database...");
+        logger_api["info_api_model"]("Querying database...");
         var message = await model_info_query_promise(model_id);
-        verbose("...database query complete.");
-        super_super_verbose("Returning " + JSON.stringify(message));
+        logger_api["info_api_model"]("...database query complete.");
+        logger_api["super_verbose_api_model"]("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
     } 
     catch (err)
     {
-        error("Error processing query: " + err);  
+        logger_api["error_api_model"]("Error processing query: " + err);  
         res.status(500).json({ success: false, error: err.message });  
     }
 });
 
 // API Route to get all shader sets for a given model
 models_routes.get('/api/model/model_shader_sets', async (req, res) => {
-    info("Processing request: " + req.url);
+    logger_api["info_api_model"]("Processing request: " + req.url);
     if (req.query.model_name == null || req.query.model_name == undefined)
     {
         var model_name = "cube.obj";
@@ -229,22 +232,22 @@ models_routes.get('/api/model/model_shader_sets', async (req, res) => {
     }
     try
     {
-        verbose("Querying database...");
+        logger_api["info_api_model"]("Querying database...");
         var message = await model_shader_sets_query_promise(model_name);
-        verbose("...database query complete.");
-        super_super_verbose("Returning " + JSON.stringify(message));
+        logger_api["info_api_model"]("...database query complete.");
+        logger_api["super_verbose_api_model"]("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
     } 
     catch (err)
     {
-        error("Error processing query: " + err); 
+        logger_api["error_api_model"]("Error processing query: " + err);  
         res.status(500).json({ success: false, error: err.message });  
     }
 });
 
 // API Route to get all textures for a given model
 models_routes.get('/api/model/model_textures', async (req, res) => {
-    info("Processing request: " + req.url);
+    logger_api["info_api_model"]("Processing request: " + req.url);
     if (req.query.model_name == null || req.query.model_name == undefined)
     {
         var model_name = "cube.obj";
@@ -253,22 +256,22 @@ models_routes.get('/api/model/model_textures', async (req, res) => {
     }
     try
     {
-        verbose("Querying database...");
+        logger_api["info_api_model"]("Querying database...");
         var message = await model_textures_query_promise(model_name);
-        verbose("...database query complete.");
-        super_super_verbose("Returning " + JSON.stringify(message));
+        logger_api["info_api_model"]("...database query complete.");
+        logger_api["super_verbose_api_model"]("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
     } 
     catch (err)
     {
-        error("Error processing query: " + err); 
+        logger_api["error_api_model"]("Error processing query: " + err);  
         res.status(500).json({ success: false, error: err.message });  
     }
 });
 
 // API Route to get all materials for a given model
 models_routes.get('/api/model/model_materials', async (req, res) => {
-    info("Processing request: " + req.url);
+    logger_api["info_api_model"]("Processing request: " + req.url);
     if (req.query.model_name == null || req.query.model_name == undefined)
     {
         var model_name = "cube.obj";
@@ -277,22 +280,22 @@ models_routes.get('/api/model/model_materials', async (req, res) => {
     }
     try
     {
-        verbose("Querying database...");
+        logger_api["info_api_model"]("Querying database...");
         var message = await model_materials_query_promise(model_name);
-        verbose("...database query complete.");
-        super_super_verbose("Returning " + JSON.stringify(message));
+        logger_api["info_api_model"]("...database query complete.");
+        logger_api["super_verbose_api_model"]("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
     } 
     catch (err)
     {
-        error("Error processing query: " + err); 
+        logger_api["error_api_model"]("Error processing query: " + err);  
         res.status(500).json({ success: false, error: err.message });  
     }
 });
 
 // API Route to get all textures for a given material
 models_routes.get('/api/material/material_textures', async (req, res) => {
-    info("Processing request: " + req.url);
+    logger_api["info_api_model"]("Processing request: " + req.url);
     if (req.query.material_name == null || req.query.material_name == undefined)
     {
         var material_name = "cube.obj";
@@ -301,22 +304,22 @@ models_routes.get('/api/material/material_textures', async (req, res) => {
     }
     try
     {
-        verbose("Querying database...");
+        logger_api["info_api_model"]("Querying database...");
         var message = await material_textures_query_promise(material_name);
-        verbose("...database query complete.");
-        super_super_verbose("Returning " + JSON.stringify(message));
+        logger_api["info_api_model"]("...database query complete.");
+        logger_api["super_verbose_api_model"]("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
     } 
     catch (err)
     {
-        error("Error processing query: " + err); 
+        logger_api["error_api_model"]("Error processing query: " + err);  
         res.status(500).json({ success: false, error: err.message });  
     }
 });
 
 // API Route to get all shaders for a given shader set
 models_routes.get('/api/model/shader_set_shaders', async (req, res) => {
-    info("Processing request: " + req.url);
+    logger_api["info_api_model"]("Processing request: " + req.url);
     if (req.query.shader_set_name == null || req.query.shader_set_name == undefined)
     {
         var shader_set_name = "vert-colors";
@@ -325,17 +328,18 @@ models_routes.get('/api/model/shader_set_shaders', async (req, res) => {
     }
     try
     {
-        verbose("Querying database...");
+        logger_api["info_api_model"]("Querying database...");
         var message = await shader_set_shaders_query_promise(shader_set_name);
-        verbose("...database query complete.");
-        super_super_verbose("Returning " + JSON.stringify(message));
+        logger_api["info_api_model"]("...database query complete.");
+        logger_api["super_verbose_api_model"]("Returning " + JSON.stringify(message));
         res.json({ success: true, message });
     } 
     catch (err)
     {
-        error("Error processing query: " + err); 
+        logger_api["error_api_model"]("Error processing query: " + err);  
         res.status(500).json({ success: false, error: err.message });  
     }
 });
 
-module.exports = models_routes;
+//module.exports = models_routes;
+export { models_routes };

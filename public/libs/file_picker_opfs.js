@@ -1,4 +1,4 @@
-import { info, verbose, warn, error } from "./debug_config.js";
+import { logger } from "./debug_config.mjs";
 import { change_model } from "./webgl.js";
 
 async function save_file(files) {
@@ -19,7 +19,7 @@ async function save_file(files) {
             return { valid: false, error: e };
         }
 
-        info(`Saved ${file.name} to OPFS!`);
+        logger["info_js_opfs"](`Saved ${file.name} to OPFS!`);
         return { valid: true };
     }
 }
@@ -37,7 +37,7 @@ async function process_file(files) {
     }
 
     //Clean up
-    warn("TODO add file cleanup here.");
+    logger["warn_js_opfs"]("TODO add file cleanup here.");
 }
 
 //export public facing functions

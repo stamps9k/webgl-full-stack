@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import ModelForm from "./ModelForm.js";
 import * as webgl from "../libs/webgl.js";
-import { super_verbose, info, verbose, warn, error } from "../libs/debug_config.js";
+import { logger } from "../libs/debug_config.mjs"
 
 const Canvas = () => {
     useEffect(() => {
@@ -25,7 +25,7 @@ const Canvas = () => {
                 webgl.init(resources);
             } catch (e)
             {
-                warn(e.message);
+                logger["warn_js_wasm"](e.message);
                 toast.error
                 (
                     <span>
