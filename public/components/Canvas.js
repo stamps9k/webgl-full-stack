@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import ModelForm from "./ModelForm.js";
-import * as webgl from "../libs/webgl.js";
+import * as webgl from "../libs/webgl.mjs";
 import { logger } from "../libs/debug_config.mjs"
 
 const Canvas = () => {

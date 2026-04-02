@@ -3,10 +3,10 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import { ModelFormContext } from '../contexts/ModelFormContext.js';
 
-import * as fp_obj from "../libs/file_picker_obj.js";
-import * as fp_opfs from "../libs/file_picker_opfs.js";
-import * as fp_mat from "../libs/file_picker_mtl.js";
-import * as fp_tex from "../libs/file_picker_tex.js";
+import * as fp_obj from "../libs/file_picker_obj.mjs";
+import * as fp_opfs from "../libs/file_picker_opfs.mjs";
+import * as fp_mat from "../libs/file_picker_mtl.mjs";
+import * as fp_tex from "../libs/file_picker_tex.mjs";
 
 const ModelFormRow = () => {
     const { model_name, update_model_name } = useContext(ModelFormContext);

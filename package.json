@@ -2,6 +2,7 @@
   "name": "webgl-full-stack",
   "version": "1.0.0",
   "description": "A full stack implementation of my previous static webgl project",
+  "type": "module",
   "main": "server.mjs",
   "scripts": {
     "dev": "nodemon --import ./env.mjs server.mjs",

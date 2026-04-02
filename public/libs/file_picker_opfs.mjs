@@ -1,5 +1,5 @@
 import { logger } from "./debug_config.mjs";
-import { change_model } from "./webgl.js";
+import { change_model } from "./webgl.mjs";
 
 async function save_file(files) {
     const opfsRoot = await navigator.storage.getDirectory(); // OPFS root

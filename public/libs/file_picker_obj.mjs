@@ -1,5 +1,5 @@
 import { logger } from "./debug_config.mjs";
-import { change_model } from "./webgl.js";
+import { change_model } from "./webgl.mjs";
 
 /**
  * Validates that the given file is a Blender OBJ file.
