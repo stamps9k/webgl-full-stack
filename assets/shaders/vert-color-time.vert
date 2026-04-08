@@ -5,6 +5,7 @@ in vec3 a_color;
 uniform mat4 u_projection_matrix;
 uniform mat4 u_camera_matrix;
 uniform mat4 u_model_matrix;
+uniform mat4 u_model_normalize_matrix;
 uniform vec2 u_mouse_position;
 uniform vec2 u_resolution;
 uniform float u_time;
@@ -22,5 +23,5 @@ void main() {
 	mouse_position = u_mouse_position;
 
 	//Multiply the position by the projection matrix then the camera matrix	
-	gl_Position = u_projection_matrix * u_camera_matrix * u_model_matrix * a_position;
+	gl_Position = u_projection_matrix * u_camera_matrix * u_model_matrix * u_model_normalize_matrix * a_position;
 }
