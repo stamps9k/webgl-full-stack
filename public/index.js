@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./components/App.js";
 
 //Assets imported by webpack
-import '../assets/models/cube.obj';
+import '../assets/models/cube-unlit.obj';
 import '../assets/models/cube-tex.obj';
 import '../assets/models/teapot.obj';
 import '../assets/models/chaynik.obj';
@@ -18,7 +18,7 @@ import '../assets/shaders/vert-color-time.vert';
 import '../assets/shaders/vert-color-time.frag';
 import '../assets/shaders/cube-tex.vert';
 import '../assets/shaders/cube-tex.frag';
-import '../assets/materials/cube.mtl';
+import '../assets/materials/cube-tex.mtl';
 import '../assets/materials/chaynik.mtl';
 import '../assets/textures/cube-tex.tex';
 import '../assets/textures/chaynik.tex';

@@ -5,7 +5,7 @@ export const ModelFormContext = createContext();
 
 export const ModelFormContextProvider = ((props) => {
     //Initialise variables and setters
-    const [model_name, set_model_name] = useState("cube.obj");
+    const [model_name, set_model_name] = useState("cube-unlit.obj");
     const [shader_sets, set_shader_sets] = useState([{shader_set_id: 1, name: "vert-color", display_name: "Colored Vertices"}]);
     const [textures, set_textures] = useState([{texture_id: 1, name: "", display_name: "Element Uninitialised"}]);
 
@@ -21,7 +21,7 @@ export const ModelFormContextProvider = ((props) => {
     //Add default model if not set
     if (paramMap.get("model") == undefined)
     {
-        paramMap.set("model", "cube.obj");
+        paramMap.set("model", "cube-unlit.obj");
     }
     if (paramMap.get("shader_set") == undefined)
     {

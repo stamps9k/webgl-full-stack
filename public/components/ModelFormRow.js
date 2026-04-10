@@ -6,24 +6,10 @@ const ModelFormRow = () => {
     const { model_name, update_model_name } = useContext(ModelFormContext);
 
     //Form Items
-    const [models, set_models] = useState([{model_id: 1, name: "cube.obj", display_name: "Cube"}]);
+    const [models, set_models] = useState([{model_id: 1, name: "cube-unlit.obj", display_name: "Cube"}]);
 
     const handle_model_change = ((e) => {
         update_model_name(e.target.value);
-        /*fetch("/api/model/model_shader_sets?model_name=" + e.target.value)
-            .then(response => response.json())
-            .then(data => {
-                update_shader_sets(data.message);
-            })
-            .catch(error => console.error("Error fetching data:", error))
-        ;
-        fetch("/api/model/model_textures?model_name=" + e.target.value)
-            .then(response => response.json())
-            .then(data => {
-                update_textures(data.message);
-            })
-            .catch(error => console.error("Error fetching data:", error))
-        ;*/
     });
     //Get initial values for Form
     useEffect
