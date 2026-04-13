@@ -16,7 +16,7 @@ const Canvas = () => {
                 resources.set("vert_shader", await webgl.fetch_vert_shader(shaders.get("vert_shader")));
                 resources.set("frag_shader", await webgl.fetch_frag_shader(shaders.get("frag_shader")));
                 if(url_params.get("model") == undefined) {
-                    resources.set("cube", await webgl.fetch_model("cube.obj"));
+                    resources.set("cube", await webgl.fetch_model("cube-unlit.obj"));
                 } else {
                     resources.set("cube", await webgl.fetch_model(url_params.get("model")));
                 }
