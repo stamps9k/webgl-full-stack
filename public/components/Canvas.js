@@ -60,27 +60,27 @@ const Canvas = () => {
                     { fps }
                 </div>
                 <div className="w-75">
-                    <span class="p-2">
+                    <span className="p-2">
                         <label htmlFor="zoom_in"> Zoom In:&nbsp;</label>
                         <input type="checkbox" id="zoom_in" name="zoom_in" value="zoom_in" onChange={webgl.update_zoom_in} />
                     </span>
                     |
-                    <span class="p-2">
+                    <span className="p-2">
                         <label htmlFor="zoom_out"> Zoom Out:&nbsp;</label>
                         <input type="checkbox" id="zoom_out" name="zoom_out" value="zoom_out" onChange={webgl.update_zoom_out} />
                     </span>
                     |
-                    <span class="p-2">
+                    <span className="p-2">
                         <label htmlFor="rotation_x"> Rotate X:&nbsp;</label>
                         <input type="checkbox" id="rotation_x" name="rotation_x" value="rotation_x" onChange={webgl.update_rotate_x} />
                     </span>
                     |
-                    <span class="p-2">
+                    <span className="p-2">
                         <label htmlFor="rotation_y"> Rotate Y:&nbsp;</label>
                         <input type="checkbox" id="rotation_y" name="rotation_y" value="rotation_y" onChange={webgl.update_rotate_y} />
                     </span>
                     |
-                    <span class="p-2">
+                    <span className="p-2">
                         <label htmlFor="rotation_z"> Rotate Z:&nbsp;</label>
                         <input type="checkbox" id="rotation_z" name="rotation_z" value="rotation_z" onChange={webgl.update_rotate_z} />
                     </span>

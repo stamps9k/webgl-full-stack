@@ -14,14 +14,14 @@ const ControlOptions = () => {
             <div id="headingRow" className="ms-auto text-start row">
                 <h3 htmlFor="model" className="text-decoration-underline">Control Options</h3>
             </div>
-            <span class="p-2">
+            <span className="p-2">
                 <label htmlFor="rotation_z"> FPS:&nbsp;</label>
-                <input type="radio" id="fps" name="control_scheme" value="fps" checked />
+                <input type="radio" id="fps" name="control_scheme" value="fps" checked readOnly />
             </span>
             |
-            <span class="p-2">
+            <span className="p-2">
                 <label htmlFor="rotation_z"> Blender:&nbsp;</label>
-                <input type="radio" id="blender" name="control_scheme" value="blender" disabled />
+                <input type="radio" id="blender" name="control_scheme" value="blender" disabled readOnly />
             </span>
             <ToastContainer />
         </div>
