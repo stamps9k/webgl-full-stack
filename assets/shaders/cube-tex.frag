@@ -3,6 +3,7 @@ precision highp float;
 
 //Passed in from the vertex shader
 in vec2 v_texcoord;
+in vec4 color;
 
 //The texture
 uniform sampler2D u_texture;
@@ -10,5 +11,5 @@ uniform sampler2D u_texture;
 out vec4 frag_colour;
 
 void main() {
-	frag_colour = texture(u_texture, v_texcoord);
+	frag_colour = texture(u_texture, v_texcoord) * color;
 }

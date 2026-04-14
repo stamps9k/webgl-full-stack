@@ -1,6 +1,7 @@
 #version 300 es
 in vec4 a_position;
 in vec2 a_texcoord;
+in vec4 a_color;
 
 uniform mat4 u_projection_matrix;
 uniform mat4 u_camera_matrix;
@@ -11,6 +12,7 @@ uniform vec2 u_resolution;
 uniform float u_time;
 
 out vec2 v_texcoord;
+out vec4 color;
 
 void main() {
 	//Multiply the position by the projection matrix then the camera matrix	
@@ -18,4 +20,7 @@ void main() {
 
 	//Pass the texture co-ordinate to the fragment shader	
 	v_texcoord = a_texcoord;
+
+	//Pass the diffuse color value to the fragement shader
+	color = a_color;
 }
