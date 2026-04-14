@@ -1,6 +1,7 @@
 #version 300 es
 in vec4 a_position;
 in vec2 a_texcoord;
+in vec3 a_normal;
 in vec4 a_color;
 
 uniform mat4 u_projection_matrix;
@@ -13,6 +14,7 @@ uniform float u_time;
 
 out vec2 v_texcoord;
 out vec4 color;
+out vec3 normal;
 
 void main() {
 	//Multiply the position by the projection matrix then the camera matrix	
@@ -23,4 +25,7 @@ void main() {
 
 	//Pass the diffuse color value to the fragement shader
 	color = a_color;
+
+	//Pass the normal to the fragement shader
+	normal = mat3(u_model_matrix) * a_normal;
 }
