@@ -7,6 +7,8 @@ import ModelFormRow from "./ModelFormRow.js";
 import TextureFormRow from "./TextureFormRow.js";
 import ShaderSetFormRow from "./ShaderSetFormRow.js";
 import { ModelFormContextProvider } from '../contexts/ModelFormContext.js';
+import RenderOptions from "./RenderOptions.js";
+import ControlOptions from "./ControlOptions.js";
 
 const ModelForm = () => {
     const [toggle, setToggle] = useState(false);
@@ -39,7 +41,7 @@ const ModelForm = () => {
 
     return (
         <ModelFormContextProvider>
-        <div>
+        <div id="accordion">
             <div className="card-header py-3 row justify-content-center" id="collapseHeading">
                 <div className="col-3">
                     <a className="btn btn-primary" data-bs-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
@@ -51,8 +53,18 @@ const ModelForm = () => {
                         Upload Model
                     </a>
                 </div>
+                <div className="col-3">
+                    <a className="btn btn-primary" data-bs-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseOne">
+                        Render Options
+                    </a>
+                </div>
+                <div className="col-3">
+                    <a className="btn btn-primary" data-bs-toggle="collapse" href="#collapseFour" aria-expanded="false" aria-controls="collapseOne">
+                        Control Options
+                    </a>
+                </div>
             </div>
-            <div id="collapseOne" className="collapse py-3" >
+            <div id="collapseOne" className="collapse py-3" data-bs-parent="#accordion">
                 <div className="border border-light card-body py-1">
                     <form id="model" target="_self" method="get" action="/index.html">
                         <div id="headingRow" className="ms-auto text-start row">
@@ -68,9 +80,19 @@ const ModelForm = () => {
                         </form>
                 </div>
             </div>
-            <div id="collapseTwo" className="collapse py-3" >
+            <div id="collapseTwo" className="collapse py-3" data-bs-parent="#accordion">
                 <div className="border border-light card-body py-1">
                     <ModelFilePicker />
+                </div>
+            </div>
+            <div id="collapseThree" className="collapse py-3" data-bs-parent="#accordion">
+                <div className="border border-light card-body py-1">
+                    <RenderOptions />
+                </div>
+            </div>
+            <div id="collapseFour" className="collapse py-3" data-bs-parent="#accordion">
+                <div className="border border-light card-body py-1">
+                    <ControlOptions />
                 </div>
             </div>
         </div>
