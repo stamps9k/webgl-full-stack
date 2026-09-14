@@ -44,7 +44,10 @@ export default (env, argv) => {
                 },
                 {
                     test: /\.css$/, 
-                    use: ['style-loader', 'css-loader']
+                    use: [
+                        isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+                        'css-loader'
+                    ]
                 },
                 {
                     test: /\.scss$/,
