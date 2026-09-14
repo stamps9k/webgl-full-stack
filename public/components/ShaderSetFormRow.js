@@ -37,26 +37,26 @@ const ShaderSetFormRow = () => {
         [model_name]
     )
 
+    // TODO: no live shader-swap exists in webgl.mjs yet (this pre-dates the
+    // toolbar redesign — selecting a shader here only ever changed this
+    // list, never the renderer, even via the old form submit). Wire this up
+    // once the WASM engine exposes something like change_shader().
     return (
-        <div id="shaderRow" className="ms-auto text-start py-1 row">
-            <div id="shaderLabel" className="col-1"> 
-                <label htmlFor="shader">Shader: </label>
-            </div>
-            <div id="shaderElement" className="col-1">
-                <select id="shader_set" name="shader_set">
-                    {
-                        shader_sets.map
+        <div id="shaderRow" className="select-group">
+            <label htmlFor="shader_set">Shader</label>
+            <select id="shader_set" name="shader_set">
+                {
+                    shader_sets.map
+                    (
+                        (shader_set) => 
                         (
-                            (shader_set) => 
-                            (
-                                <option key={shader_set.shader_set_id} value={shader_set.shader_set_name}>
-                                    {shader_set.shader_set_display_name}
-                                </option>
-                            )
+                            <option key={shader_set.shader_set_id} value={shader_set.shader_set_name}>
+                                {shader_set.shader_set_display_name}
+                            </option>
                         )
-                    }
-                </select>
-            </div>
+                    )
+                }
+            </select>
         </div>
     )
 }
