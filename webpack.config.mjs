@@ -50,36 +50,6 @@ export default (env, argv) => {
                     ]
                 },
                 {
-                    test: /\.scss$/,
-                    oneOf: [
-                        {
-                            // Rule for Bootstrap SCSS
-                            include: /node_modules\/bootstrap[\\/]scss/,
-                            use: [
-                                isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-                                'css-loader',
-                                {
-                                    loader: 'sass-loader',
-                                    options: {
-                                        sassOptions: {
-                                            quietDeps: true // Suppress only Bootstrap warnings
-                                        }
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            // Rule for all other SCSS
-                            exclude: /node_modules\/bootstrap[\\/]scss/,
-                            use: [
-                                isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-                                'css-loader',
-                                'sass-loader' // No quietDeps, so warnings show up
-                            ]
-                        }
-                    ]
-                },
-                {
                     test: /\.(png|jpe?g|gif|svg|vert|frag|obj|ico|tex|mtl)$/,
                     type: 'asset/resource',
                         generator: {

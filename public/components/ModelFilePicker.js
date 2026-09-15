@@ -1,11 +1,5 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import { ToastContainer, toast } from 'react-toastify';
-// Import the exact same bundle App.js loads (not the "bootstrap" package's
-// separate ESM build) — Bootstrap's data-api created this modal's instance
-// and backdrop using that bundle's own internal state, and a different
-// build of the library can't see them, so Modal.getInstance() would come
-// back null and never actually remove the darkened backdrop.
-import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import { ModelFormContext } from '../contexts/ModelFormContext.js';
 
