@@ -9,8 +9,6 @@ import '../assets/models/cube-tex.obj';
 import '../assets/models/teapot.obj';
 import '../assets/models/chaynik.obj';
 import '../assets/models/trees.obj';
-import '../assets/img/icon.jpg';
-import '../assets/img/favicons/favicon.ico';
 import '../assets/shaders/vert-color.vert';
 import '../assets/shaders/vert-color.frag';
 import '../assets/shaders/vert-color-mouse.vert';
