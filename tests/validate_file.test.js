@@ -1,4 +1,7 @@
-import { validate_file } from '../public/libs/file_picker.js'; // Jest setup for browser-like environment
+// file_picker_obj imports webgl.mjs, which loads the wasm package.
+jest.mock('wasm-model-viewer-core-bin', () => ({}));
+
+import { validate_obj as validate_file } from '../public/libs/file_picker_obj.mjs';
 
 describe('validate_file', () => {
     /*function makeFile(name, content) {

@@ -1,4 +1,4 @@
-jest.mock('wasm-model-viewer-core', () => ({
+jest.mock('wasm-model-viewer-core-bin', () => ({
   enable_rotate_x: jest.fn(),
   disable_rotate_x: jest.fn(),
   enable_rotate_y: jest.fn(),
@@ -8,8 +8,8 @@ jest.mock('wasm-model-viewer-core', () => ({
   initialize_web_gl: jest.fn(),
 }));
 
-import * as wasm from 'wasm-model-viewer-core';
-import { fetch_vert_shader, update_rotate_x, update_rotate_y, update_rotate_z } from '../public/libs/webgl.js';
+import * as wasm from 'wasm-model-viewer-core-bin';
+import { fetch_vert_shader, update_rotate_x, update_rotate_y, update_rotate_z } from '../public/libs/webgl.mjs';
 
 describe('webgl.js public functions', () => {
     describe('update_rotate_x', () => {
