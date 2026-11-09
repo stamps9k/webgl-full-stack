@@ -1,4 +1,5 @@
 import { logger } from "./debug_config.mjs";
+import { MAX_OBJ_BYTES, format_limit } from "./file_limits.mjs";
 import { change_model } from "./webgl.mjs";
 
 /**
@@ -7,12 +8,9 @@ import { change_model } from "./webgl.mjs";
  * Returns a Promise resolving to { valid: boolean, error?: string }
  */
 async function validate_obj(file) {
-    //TMP debug. Allow large files
-    //if (file.size > 1000485760) {
-    // Reject any files that are too big. 1048576 is 10MB in Bytes.
-    if (file.size > 10485760) {
-        logger["error_js_opfs"]("Validation failed file is too large. Size is " + file.size)
-        return { valid: false, error: 'File is too large. Maximum vald size is 10MB.' };
+    if (file.size > MAX_OBJ_BYTES) {
+        logger["error_js_opfs"]("Validation failed file is too large. Size is " + file.size);
+        return { valid: false, error: 'File is too large. Maximum valid size is ' + format_limit(MAX_OBJ_BYTES) + '.' };
     }
 
     // Check extension

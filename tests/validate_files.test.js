@@ -2,6 +2,7 @@
 jest.mock('wasm-model-viewer-core-bin', () => ({}));
 
 import { validate_files } from '../public/libs/file_picker_validate.mjs';
+import { MAX_OBJ_BYTES, MAX_MTL_BYTES, MAX_TEX_BYTES } from '../public/libs/file_limits.mjs';
 
 describe('validate_files', () => {
     function makeFile(name, content = '', size = content.length) {
@@ -45,9 +46,19 @@ describe('validate_files', () => {
         expect(result.valid).toBe(false);
     });
 
-    it('rejects oversized OBJ files', async () => {
-        const result = await validate_files([makeFile('big.obj', '', 20 * 1024 * 1024)]);
+    it.each([
+        ['big.obj', MAX_OBJ_BYTES, /100MB/],
+        ['big.mtl', MAX_MTL_BYTES, /10MB/],
+        ['big.png', MAX_TEX_BYTES, /100MB/],
+    ])('rejects %s one byte over its limit', async (name, limit, message) => {
+        const result = await validate_files([makeFile(name, '', limit + 1)]);
         expect(result.valid).toBe(false);
         expect(result.error).toMatch(/too large/);
+        expect(result.error).toMatch(message);
+    });
+
+    it('accepts a texture exactly at its limit', async () => {
+        const result = await validate_files([makeFile('big.png', 'png', MAX_TEX_BYTES)]);
+        expect(result.valid).toBe(true);
     });
 });
