@@ -3,10 +3,8 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import { ModelFormContext } from '../contexts/ModelFormContext.js';
 
-import * as fp_obj from "../libs/file_picker_obj.mjs";
 import * as fp_opfs from "../libs/file_picker_opfs.mjs";
-import * as fp_mat from "../libs/file_picker_mtl.mjs";
-import * as fp_tex from "../libs/file_picker_tex.mjs";
+import * as fp_validate from "../libs/file_picker_validate.mjs";
 
 const ModelFilePicker = () => {
     const { model_name, update_model_name } = useContext(ModelFormContext);
@@ -45,32 +43,8 @@ const ModelFilePicker = () => {
             file => !/(^|\/)\./.test(file.name)
         );
 
-        // Validate file contents and stop on any remaining unknown file types.
-        for (const file of files)
-        {
-            var validation_result = { valid: true, error: '' };
-            if (file.name.includes('obj'))
-            {
-                validation_result = await fp_obj.validate_obj(file);
-            } 
-            else if 
-            (
-                file.name.includes('tex') ||
-                file.name.includes('png')
-            )
-            {
-                validation_result = await fp_tex.validate_tex(file);
-            } 
-            else if (file.name.includes('mtl')) 
-            {
-                validation_result = await fp_mat.validate_mtl(file);
-            }
-            else
-            {
-                validation_result = { valid: false, error: 'Unknown file type .' + file.name.split('.').pop() }
-                break;
-            }
-        }
+        // Validate every file; the first invalid one rejects the selection.
+        const validation_result = await fp_validate.validate_files(files);
 
         // Return any validation errors to the user
         if (validation_result.valid === false) {

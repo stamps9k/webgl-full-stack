@@ -21,7 +21,7 @@ async function validate_tex(file) {
         !file.name.toLowerCase().endsWith('.png')
     )
     {
-        return { valid: false, error: 'File must have a .tex extension.' };
+        return { valid: false, error: 'File must have a .tex or .png extension.' };
     }
 
     return { valid: true };
