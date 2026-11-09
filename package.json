@@ -9,7 +9,9 @@
     "prod": "node server.mjs",
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "prepare": "husky",
+    "audit:ci": "npx --yes audit-ci@7.1.0 --config audit-ci.jsonc"
   },
   "repository": {
     "type": "git",
@@ -44,6 +46,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.3",
+    "husky": "^9.1.7",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "mini-css-extract-plugin": "^2.9.2",
@@ -54,5 +57,10 @@
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
+  },
+  "overrides": {
+    "glob@>=9.0.0 <14.0.2": "^14.0.4",
+    "minimatch@>=7.0.0 <11.0.1": "^11.0.5",
+    "uuid@<11.1.1": "^11.1.1"
   }
 }
