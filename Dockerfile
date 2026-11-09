@@ -5,7 +5,7 @@
 # floating lts tag, so a rebuild never silently jumps versions. Builder
 # and runtime must stay on the same version: better-sqlite3 is compiled
 # in the builder and its native binary is copied into the runtime.
-FROM node:24-alpine3.22 AS builder
+FROM node:24-alpine3.24 AS builder
 WORKDIR /app
 
 # build-base + python3 are needed because better-sqlite3 has no
@@ -52,7 +52,7 @@ RUN npm prune --omit=dev
 # node_modules is copied straight from the builder rather than
 # re-running npm ci here, so this stage never needs to re-resolve the
 # github: dependency a second time.
-FROM node:24-alpine3.22 AS runtime
+FROM node:24-alpine3.24 AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
