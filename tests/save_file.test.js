@@ -1,5 +1,5 @@
 // file_picker_opfs imports webgl.mjs, which loads the wasm package.
-jest.mock('wasm-model-viewer-core-bin', () => ({}));
+jest.mock('wasm-model-viewer-core', () => ({}));
 
 import { save_file } from '../public/libs/file_picker_opfs.mjs';
 

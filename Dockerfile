@@ -11,7 +11,8 @@ WORKDIR /app
 # build-base + python3 are needed because better-sqlite3 has no
 # prebuilt binary for musl libc (Alpine) and has to compile from
 # source; git is needed because package.json depends on a github:
-# package (wasm-model-viewer-core-bin) rather than one from the npm
+# package (wasm-model-viewer-core, from the wasm-model-viewer-core-bin
+# repo) rather than one from the npm
 # registry, so npm needs git available to fetch it.
 RUN apk update && \
     apk upgrade && \
@@ -28,7 +29,7 @@ RUN npm ci
 ARG WASM_BIN_SHA=""
 RUN if [ -n "$WASM_BIN_SHA" ]; then \
       npm install --no-audit --no-fund \
-        "wasm-model-viewer-core-bin@github:stamps9k/wasm-model-viewer-core-bin#${WASM_BIN_SHA}"; \
+        "wasm-model-viewer-core@github:stamps9k/wasm-model-viewer-core-bin#${WASM_BIN_SHA}"; \
     fi
 
 # .dockerignore keeps node_modules, dist, and test out of what actually

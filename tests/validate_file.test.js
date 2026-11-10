@@ -1,5 +1,5 @@
 // file_picker_obj imports webgl.mjs, which loads the wasm package.
-jest.mock('wasm-model-viewer-core-bin', () => ({}));
+jest.mock('wasm-model-viewer-core', () => ({}));
 
 import { validate_obj as validate_file } from '../public/libs/file_picker_obj.mjs';
 

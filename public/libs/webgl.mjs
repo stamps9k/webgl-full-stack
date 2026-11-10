@@ -1,4 +1,4 @@
-import * as wasm from "wasm-model-viewer-core-bin";
+import * as wasm from "wasm-model-viewer-core";
 import { logger } from "./debug_config.mjs";
 
 var global_resources;
