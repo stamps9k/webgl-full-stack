@@ -10,9 +10,10 @@ function compute_obj_stats(obj_text) {
   const lines = obj_text.split("\n");
   for (const raw_line of lines) {
     const line = raw_line.trim();
-    if (line.startsWith("v ")) {
+    // OBJ allows any whitespace after the keyword, so "v\t..." counts too.
+    if (/^v\s/.test(line)) {
       vertices++;
-    } else if (line.startsWith("f ")) {
+    } else if (/^f\s/.test(line)) {
       faces++;
     }
   }
@@ -29,8 +30,11 @@ function format_bytes(size_bytes) {
   if (size_bytes < 1024) {
     return size_bytes + " B";
   }
-  if (size_bytes < 1024 * 1024) {
-    return (size_bytes / 1024).toFixed(1) + " KB";
+  // Compare the rounded value, so sizes just under 1 MB show as "1.0 MB"
+  // rather than "1024.0 KB".
+  const kilobytes = (size_bytes / 1024).toFixed(1);
+  if (Number(kilobytes) < 1024) {
+    return kilobytes + " KB";
   }
   return (size_bytes / (1024 * 1024)).toFixed(1) + " MB";
 }

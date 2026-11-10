@@ -29,6 +29,11 @@ describe("compute_obj_stats", () => {
     expect(compute_obj_stats(obj)).toMatchObject({ vertices: 2, faces: 1 });
   });
 
+  it("counts lines separated by tabs", () => {
+    const obj = "v\t0 0 0\nv\t1 0 0\nf\t1 2 1\n";
+    expect(compute_obj_stats(obj)).toMatchObject({ vertices: 2, faces: 1 });
+  });
+
   it("returns zeros for an empty file", () => {
     expect(compute_obj_stats("")).toEqual({
       vertices: 0,
@@ -58,6 +63,11 @@ describe("format_bytes", () => {
   it("shows kilobytes to one decimal place below 1 MB", () => {
     expect(format_bytes(1024)).toBe("1.0 KB");
     expect(format_bytes(1536)).toBe("1.5 KB");
+  });
+
+  it("rounds sizes just under 1 MB up to 1.0 MB, not 1024.0 KB", () => {
+    expect(format_bytes(1024 * 1024 - 1)).toBe("1.0 MB");
+    expect(format_bytes(1024 * 1023.94)).toBe("1023.9 KB");
   });
 
   it("shows megabytes to one decimal place from 1 MB", () => {
