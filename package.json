@@ -11,7 +11,9 @@
     "build": "webpack --mode production",
     "test": "jest --verbose",
     "prepare": "husky",
-    "audit:ci": "npx --yes audit-ci@7.1.0 --config audit-ci.jsonc"
+    "audit:ci": "npx --yes audit-ci@7.1.0 --config audit-ci.jsonc",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -49,8 +51,10 @@
     "husky": "^9.1.7",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
+    "lint-staged": "^17.6.0",
     "mini-css-extract-plugin": "^2.9.2",
     "nodemon": "^3.1.9",
+    "prettier": "^3.9.10",
     "sass": "^1.84.0",
     "sass-loader": "^16.0.4",
     "style-loader": "^4.0.0",
@@ -62,5 +66,8 @@
     "glob@>=9.0.0 <14.0.2": "^14.0.4",
     "minimatch@>=7.0.0 <11.0.1": "^11.0.5",
     "uuid@<11.1.1": "^11.1.1"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
   }
 }

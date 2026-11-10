@@ -1,3 +1,5 @@
+npx lint-staged --concurrent false
+
 # Run the test suite (checks the working tree, not just the staged files).
 npm test --silent
 

@@ -9,7 +9,7 @@ const MAX_MTL_BYTES = 10 * MB;
 const MAX_TEX_BYTES = 100 * MB;
 
 function format_limit(bytes) {
-    return (bytes / MB) + 'MB';
+  return bytes / MB + "MB";
 }
 
-export { MAX_OBJ_BYTES, MAX_MTL_BYTES, MAX_TEX_BYTES, format_limit }
+export { MAX_OBJ_BYTES, MAX_MTL_BYTES, MAX_TEX_BYTES, format_limit };

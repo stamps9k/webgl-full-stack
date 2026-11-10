@@ -1,64 +1,52 @@
 import { useContext, useEffect, useState } from "react";
 
-import { ModelFormContext } from '../contexts/ModelFormContext.js';
+import { ModelFormContext } from "../contexts/ModelFormContext.js";
 
 const ShaderSetFormRow = () => {
-    const { model_name } = useContext(ModelFormContext);
+  const { model_name } = useContext(ModelFormContext);
 
-    const [shader_sets, set_shader_sets] = useState([{shader_set_id: 1, name: "vert-color", display_name: "Colored Vertices"}]); 
+  const [shader_sets, set_shader_sets] = useState([
+    { shader_set_id: 1, name: "vert-color", display_name: "Colored Vertices" },
+  ]);
 
-    //Get initial values for form
-    useEffect
-    (
-        () => {
-            fetch("/api/model/model_shader_sets?model_name=" + model_name)
-                .then(response => response.json())
-                .then(data => {
-                    set_shader_sets(data.message);
-                })
-                .catch(error => console.error("Error fetching data:", error))
-            ;
-        }, 
-        []
-    );
+  //Get initial values for form
+  useEffect(() => {
+    fetch("/api/model/model_shader_sets?model_name=" + model_name)
+      .then((response) => response.json())
+      .then((data) => {
+        set_shader_sets(data.message);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
-    //Handle change in the model name
-    useEffect
-    (
-        () => {
-            fetch("/api/model/model_shader_sets?model_name=" + model_name)
-                .then(response => response.json())
-                .then(data => {
-                    set_shader_sets(data.message);
-                })
-                .catch(error => console.error("Error fetching data:", error))
-            ;
-        },
-        [model_name]
-    )
+  //Handle change in the model name
+  useEffect(() => {
+    fetch("/api/model/model_shader_sets?model_name=" + model_name)
+      .then((response) => response.json())
+      .then((data) => {
+        set_shader_sets(data.message);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [model_name]);
 
-    // TODO: no live shader-swap exists in webgl.mjs yet (this pre-dates the
-    // toolbar redesign — selecting a shader here only ever changed this
-    // list, never the renderer, even via the old form submit). Wire this up
-    // once the WASM engine exposes something like change_shader().
-    return (
-        <div id="shaderRow" className="select-group">
-            <label htmlFor="shader_set">Shader</label>
-            <select id="shader_set" name="shader_set">
-                {
-                    shader_sets.map
-                    (
-                        (shader_set) => 
-                        (
-                            <option key={shader_set.shader_set_id} value={shader_set.shader_set_name}>
-                                {shader_set.shader_set_display_name}
-                            </option>
-                        )
-                    )
-                }
-            </select>
-        </div>
-    )
-}
+  // TODO: no live shader-swap exists in webgl.mjs yet (this pre-dates the
+  // toolbar redesign — selecting a shader here only ever changed this
+  // list, never the renderer, even via the old form submit). Wire this up
+  // once the WASM engine exposes something like change_shader().
+  return (
+    <div id="shaderRow" className="select-group">
+      <label htmlFor="shader_set">Shader</label>
+      <select id="shader_set" name="shader_set">
+        {shader_sets.map((shader_set) => (
+          <option
+            key={shader_set.shader_set_id}
+            value={shader_set.shader_set_name}>
+            {shader_set.shader_set_display_name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
 
 export default ShaderSetFormRow;
