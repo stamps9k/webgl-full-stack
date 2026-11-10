@@ -1,3 +1,6 @@
+# Run the test suite (checks the working tree, not just the staged files).
+npm test --silent
+
 # Security audit on dependency changes.
 # Runs audit-ci against the *staged* package.json, package-lock.json and
 # audit-ci.jsonc, only when the commit touches one of them. Exceptions live in
